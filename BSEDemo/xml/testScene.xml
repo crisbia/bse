@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene>
+  <gravity x="1.0" y="-1.0"/>
+  <rigid_body name="a">
+    <position x="1.0" y="2.0"/>
+    <orientation angle="3.1415"/>
+  </rigid_body>
+</scene>

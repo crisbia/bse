@@ -1,0 +1,17 @@
+BSE TODO LIST
+-------------
+
+bseDemo
+-------
+- Test / Demos framework, make it better. Ex: space bar pression to switch demo.
+- Decide which demos to publicly release.
+
+
+bsePhysics
+----------
+- Improve sweep and prune to support add/remove shapes
+- Fix box-box, box-poly, poly-poly contact determination to support critical cases
+- Refactor pools using. Started, but it needs more work.
+
+bseAI
+-----
