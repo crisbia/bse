@@ -73,7 +73,7 @@ Character::Character(Maze* maze, const CharacterDesc& desc) :
   bodyDesc.shapesDescs.push_back(&circleDesc);
 
   // create a physical body for the character. the position of the body is set from the descriptor
-  m_body = phScene->createBody(&bodyDesc);
+  m_body = phScene->createBody(bodyDesc);
   bse::phx::ShapesList &shapes = m_body->getShapes();
   m_shape = (bse::phx::Circle*)shapes[0];
 
@@ -893,25 +893,25 @@ void createRoom(bse::phx::Scene* scene, bse::Real x, bse::Real y, bse::Real size
 
   // lower bound
   bodyDesc.shapesDescs.push_back(&x_boxDesc);
-  body = gScene->createBody(&bodyDesc);
+  body = gScene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x + sizeX / 2.0f, y-0.05f);
 
   // higher bound
   bodyDesc.shapesDescs.push_back(&x_boxDesc);
-  body = gScene->createBody(&bodyDesc);
+  body = gScene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x + sizeX / 2.0f, y+0.05f + sizeY);
 
   // left bound
   bodyDesc.shapesDescs.push_back(&y_boxDesc);
-  body = gScene->createBody(&bodyDesc);
+  body = gScene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x-0.05f, y + sizeY/2.0f);
 
   // right bound
   bodyDesc.shapesDescs.push_back(&y_boxDesc);
-  body = gScene->createBody(&bodyDesc);
+  body = gScene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x+0.05f + sizeX, y + sizeY/2.0f);
 }
@@ -972,7 +972,7 @@ void Maze::initWallsCollisionShapes()
         bodyDesc.position = bse::Vec2(pos->x + cellSize2, pos->y);
         boxDesc.dims = bse::Vec2(thickness, cellSize);
         bodyDesc.shapesDescs.push_back(&boxDesc);
-        m_physicsScene->createBody(&bodyDesc);
+        m_physicsScene->createBody(bodyDesc);
       }
     }
 
@@ -991,7 +991,7 @@ void Maze::initWallsCollisionShapes()
         bodyDesc.position = bse::Vec2(pos->x - cellSize2, pos->y);
         boxDesc.dims = bse::Vec2(thickness, cellSize);
         bodyDesc.shapesDescs.push_back(&boxDesc);
-        m_physicsScene->createBody(&bodyDesc);
+        m_physicsScene->createBody(bodyDesc);
       }
     }
   }
@@ -1031,7 +1031,7 @@ void Maze::initWallsCollisionShapes()
         bodyDesc.position = bse::Vec2(pos->x, pos->y + cellSize2);
         boxDesc.dims = bse::Vec2(cellSize, thickness);
         bodyDesc.shapesDescs.push_back(&boxDesc);
-        m_physicsScene->createBody(&bodyDesc);
+        m_physicsScene->createBody(bodyDesc);
       }
     }
 
@@ -1050,7 +1050,7 @@ void Maze::initWallsCollisionShapes()
         bodyDesc.position = bse::Vec2(pos->x, pos->y - cellSize2);
         boxDesc.dims = bse::Vec2(cellSize, thickness);
         bodyDesc.shapesDescs.push_back(&boxDesc);
-        m_physicsScene->createBody(&bodyDesc);
+        m_physicsScene->createBody(bodyDesc);
       }
     }
   }

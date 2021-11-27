@@ -8,13 +8,13 @@ namespace phx
 {
 
 //---------------------------------------------------------------------------------------------------------------------
-Body* Body::create(Scene* scene, BodyDesc* desc)
+Body* Body::create(Scene* scene, const BodyDesc& desc)
 {
   return new Body(scene, desc);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-Body::Body(Scene* scene, const BodyDesc* bodyDesc) :
+Body::Body(Scene* scene, const BodyDesc& bodyDesc) :
     m_scene(scene),
     m_position(0,0),
     m_orientation(0),
@@ -27,7 +27,7 @@ Body::Body(Scene* scene, const BodyDesc* bodyDesc) :
 {
   m_userData = 0;
 
-  m_desc = *bodyDesc;
+  m_desc = bodyDesc;
   m_mass = m_desc.mass;
   m_invMass = (m_mass > 0) ? 1.0f / m_mass :0.0f;
   m_inertia = m_desc.inertia;
@@ -196,19 +196,16 @@ void Body::addShape(Shape* shape)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void Body::removeShape(Shape* shape)
+void Body::removeShape(const Shape* shape)
 {
-  // to be implemented
-//  m_shapes.remove(shape);
-  bse::UInt numShapes = static_cast<bse::UInt>(m_shapes.size());
-  for (bse::UInt shapeIndex = 0; shapeIndex<numShapes; ++shapeIndex)
+  for (size_t shapeIndex = 0; shapeIndex<m_shapes.size(); ++shapeIndex)
   {
     Shape* currentShape = m_shapes[shapeIndex];
     if (currentShape==shape)
     {
-      if (shapeIndex!=numShapes-1)
+      if (shapeIndex!=m_shapes.size()-1)
       {
-        m_shapes[shapeIndex] = m_shapes[numShapes-1]; // put the last in the position of the deleted one
+        m_shapes[shapeIndex] = m_shapes.back(); // put the last in the position of the deleted one
       }
 
       m_shapes.pop_back();
@@ -226,9 +223,9 @@ void Body::setMoved()
   m_dirtyShapes.setAll();
 
   // mark all its shapes as moved...
-  for (ShapesList::iterator shapesIter = m_shapes.begin(); shapesIter != m_shapes.end(); ++shapesIter)
+  for (auto shape : m_shapes)
   {
-    (*shapesIter)->setMoved();
+    shape->setMoved();
   }
 }
 
@@ -238,9 +235,9 @@ void Body::resetMoved()
   m_hasMoved = false;
 
   // mark all its shapes as moved...
-  for (ShapesList::iterator shapesIter = m_shapes.begin(); shapesIter != m_shapes.end(); ++shapesIter)
+  for (auto shape : m_shapes)
   {
-    (*shapesIter)->resetMoved();
+    shape->resetMoved();
   }
 }
 

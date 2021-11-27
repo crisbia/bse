@@ -72,7 +72,7 @@ bse::phx::AABB GameObj::getBounds() const
   for(size_t i=1; i<shapes.size(); ++i)
   {
     shape = shapes[i];
-    aabb.enclose(*(shape->getAABB()));
+    aabb.enclose(shape->getAABB());
   }
 
   return aabb;
@@ -137,7 +137,7 @@ Ship::Ship(ShipSetup* setup) :
 
   bodyDesc.shapesDescs.push_back(&polyDesc);
 
-  m_body = gScene->createBody(&bodyDesc);
+  m_body = gScene->createBody(bodyDesc);
 
   bse::phx::ShapesList &shapes = m_body->getShapes();
   m_shape = shapes[0];
@@ -208,7 +208,7 @@ Bullet::Bullet(BulletSetup* setup) : GameObj(GAMEOBJ_BULLET)
   bodyDesc.inertia = 0.01f;
   bodyDesc.shapesDescs.push_back(&sphereDesc);
 
-  m_body = gScene->createBody(&bodyDesc);
+  m_body = gScene->createBody(bodyDesc);
   bse::phx::ShapesList &shapes = m_body->getShapes();
   m_shape = shapes[0];
 
@@ -236,7 +236,7 @@ Asteroid::Asteroid(AsteroidDesc* desc) : GameObj(GAMEOBJ_ASTEROID)
   bodyDesc.mass = m_desc.mass;
   bodyDesc.shapesDescs.push_back(&polyDesc);
 
-  m_body = gScene->createBody(&bodyDesc);
+  m_body = gScene->createBody(bodyDesc);
   bse::phx::ShapesList &shapes = m_body->getShapes();
   m_shape = shapes[0];
   setPose(m_desc.position, m_desc.orientation);

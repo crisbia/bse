@@ -301,7 +301,7 @@ bool SAP::quadSearch(
     int numShapes = 0;
     for (int i = firstX; i<=lastX; ++i)
     {
-      if (m_xDelimiters[i]->shape->getAABB()->contains(point))
+      if (m_xDelimiters[i]->shape->getAABB().contains(point))
       {
         outShapes.push_back(m_xDelimiters[i]->shape);
         ++numShapes;
@@ -366,9 +366,9 @@ void SAP::updateSAP(ShapesList* shapesList, ShapePairsPool* pool)
 #ifdef BSE_ENABLE_PROFILER
           bse::ProfileTaskWrapper updateIntervals(m_scene->getProfiler(), "BSE_UPDATE_INTERVALS");
 #endif // BSE_ENABLE_PROFILER
-          const AABB* const aabb = shape->getAABB();
-          orderedInsert(true, shape, xInterval->lower, xInterval->upper, aabb->low.x, aabb->high.x, &m_xDelimiters);
-          orderedInsert(false, shape, yInterval->lower, yInterval->upper, aabb->low.y, aabb->high.y, &m_yDelimiters);
+          const AABB& aabb = shape->getAABB();
+          orderedInsert(true, shape, xInterval->lower, xInterval->upper, aabb.low.x, aabb.high.x, &m_xDelimiters);
+          orderedInsert(false, shape, yInterval->lower, yInterval->upper, aabb.low.y, aabb.high.y, &m_yDelimiters);
         }
       }
     }
@@ -415,15 +415,15 @@ void SAP::updateSAP(ShapesList* shapesList, ShapePairsPool* pool)
 void SAP::addShape(Shape* newShape)
 {
   newShape->updateAABB();
-  const AABB* aabb = newShape->getAABB();
+  const AABB& aabb = newShape->getAABB();
   ShapeIntervalsPair intervalsPair;
-  intervalsPair.first = new Interval(newShape, aabb->low.x, aabb->high.x);
-  intervalsPair.second = new Interval(newShape, aabb->low.y, aabb->high.y);
+  intervalsPair.first = new Interval(newShape, aabb.low.x, aabb.high.x);
+  intervalsPair.second = new Interval(newShape, aabb.low.y, aabb.high.y);
   m_shapeToIntervalsMap.insert(std::make_pair((const Shape*)newShape, intervalsPair));
 
   // Ordered insertion of the interval list
-  orderedInsert(true, newShape, intervalsPair.first->lower, intervalsPair.first->upper, aabb->low.x, aabb->high.x, &m_xDelimiters);
-  orderedInsert(false, newShape, intervalsPair.second->lower, intervalsPair.second->upper, aabb->low.y, aabb->high.y, &m_yDelimiters);
+  orderedInsert(true, newShape, intervalsPair.first->lower, intervalsPair.first->upper, aabb.low.x, aabb.high.x, &m_xDelimiters);
+  orderedInsert(false, newShape, intervalsPair.second->lower, intervalsPair.second->upper, aabb.low.y, aabb.high.y, &m_yDelimiters);
 }
 
 //---------------------------------------------------------------------------------------------------------------------

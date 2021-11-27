@@ -123,7 +123,7 @@ public:
   void updateAABB();
   virtual bool contains(const bse::Vec2& point) const = 0;
 
-  const AABB* getAABB() const { return &m_aabb; }
+  const AABB& getAABB() const { return m_aabb; }
   void getAABB(AABB& aabb) const { aabb = m_aabb; }
 
   bseShapeType getType() const { return m_desc->type; }

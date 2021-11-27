@@ -23,17 +23,17 @@ void Scene::destroy(Scene* scene)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-Body* Scene::createBody(BodyDesc* desc)
+Body* Scene::createBody(const BodyDesc& desc)
 {
   // create the body
   Body* body = Body::create(this, desc);
 
   // get info about shapes from the descriptor and create them
   // NB: for safety reason, the full descriptor is not stored in the body
-  bse::UInt numberOfShapes = static_cast<bse::UInt>(desc->shapesDescs.size());
+  bse::UInt numberOfShapes = static_cast<bse::UInt>(desc.shapesDescs.size());
   for (bse::UInt shapeIndex = 0; shapeIndex<numberOfShapes; ++shapeIndex)
   {
-    Shape* shape = createShape(desc->shapesDescs[shapeIndex]);
+    Shape* shape = createShape(desc.shapesDescs[shapeIndex]);
     body->addShape(shape);
     shape->setBody(body);
   }
@@ -784,7 +784,7 @@ Shape* Scene::pointCollision(const bse::Vec2& point)
   for (size_t iShape=0; iShape<numShapes; ++iShape)
   {
     Shape* shape = m_shapesList[iShape];
-    if (shape->getAABB()->contains(point) && shape->contains(point))
+    if (shape->getAABB().contains(point) && shape->contains(point))
     {
       return shape;
     }

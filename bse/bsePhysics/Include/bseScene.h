@@ -75,7 +75,7 @@ public:
   static void destroy(Scene* scene);
 
   // body creation/destruction
-  Body* createBody(BodyDesc* bodyDesc);
+  Body* createBody(const BodyDesc& bodyDesc);
   void releaseBody(Body* body);
 
 private:

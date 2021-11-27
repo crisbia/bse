@@ -24,7 +24,7 @@ namespace bse
 class Vec2
 {
 public:
-  Vec2() {}
+  Vec2() = default;
   Vec2(bse::Real x, bse::Real y) : x(x), y(y) {}
   Vec2(bse::Real v) : x(v), y(v) {}
 
@@ -105,7 +105,8 @@ public:
     return bseIsValid(x) && bseIsValid(y);
   }
 
-  Real x, y;
+  Real x = 0;
+  Real y = 0;
 
   static const Vec2 XAxis;
   static const Vec2 YAxis;

@@ -31,5 +31,8 @@
 *.out
 *.app
 
-# Mac speficic
+# Mac specific
 .DS_Store
+
+# Convenience
+_build

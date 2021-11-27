@@ -1148,7 +1148,7 @@ void SimpleBPCollider::doUpdate(ShapesList* shapes)
       }
 
       // check the aabb
-      if (shape1->getAABB()->intersect(shape2->getAABB()))
+      if (shape1->getAABB().intersect(shape2->getAABB()))
       {
         ShapesPair* pair = m_shapePairsPool.getShapesPairFromPool();
         pair->shape1 = shape1;

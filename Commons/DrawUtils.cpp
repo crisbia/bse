@@ -1096,12 +1096,12 @@ void PhysicsDebugDraw::drawRays(bse::phx::Scene* scene)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void PhysicsDebugDraw::drawAABB(const bse::phx::AABB* aabb, const Color& c)
+void PhysicsDebugDraw::drawAABB(const bse::phx::AABB& aabb, const Color& c)
 {
-  bse::Vec2 v1(aabb->low.x, aabb->low.y);
-  bse::Vec2 v2(aabb->high.x, aabb->low.y);
-  bse::Vec2 v3(aabb->high.x, aabb->high.y);
-  bse::Vec2 v4(aabb->low.x, aabb->high.y);
+  bse::Vec2 v1(aabb.low.x, aabb.low.y);
+  bse::Vec2 v2(aabb.high.x, aabb.low.y);
+  bse::Vec2 v3(aabb.high.x, aabb.high.y);
+  bse::Vec2 v4(aabb.low.x, aabb.high.y);
 
   drawLine(v1,v2,c);
   drawLine(v2,v3,c);

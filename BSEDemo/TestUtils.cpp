@@ -14,7 +14,7 @@ void createGround(bse::phx::Scene* scene, bse::Real angle, const bse::Vec2& grou
   groundDesc.orientation = angle;
 
   groundDesc.shapesDescs.push_back(&groundShapeDesc);
-  bse::phx::Body* ground = scene->createBody(&groundDesc);
+  bse::phx::Body* ground = scene->createBody(groundDesc);
 
   ground->setPosition(0,-groundDims.y * 0.5f);
 }
@@ -40,25 +40,25 @@ void createRoom(bse::phx::Scene* scene, const bse::Real x, const bse::Real y, co
 
   // lower bound
   bodyDesc.shapesDescs.push_back(&x_boxDesc);
-  body = gScene->createBody(&bodyDesc);
+  body = gScene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x + sizeX / 2.0f, y-0.05f);
 
   // higher bound
   bodyDesc.shapesDescs.push_back(&x_boxDesc);
-  body = gScene->createBody(&bodyDesc);
+  body = gScene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x + sizeX / 2.0f, y+0.05f + sizeY);
 
   // left bound
   bodyDesc.shapesDescs.push_back(&y_boxDesc);
-  body = gScene->createBody(&bodyDesc);
+  body = gScene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x-0.05f, y + sizeY/2.0f);
 
   // right bound
   bodyDesc.shapesDescs.push_back(&y_boxDesc);
-  body = gScene->createBody(&bodyDesc);
+  body = gScene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x+0.05f + sizeX, y + sizeY/2.0f);
 }
@@ -94,7 +94,7 @@ void createPolygonalRoom(bse::phx::Scene* scene, const bse::Real x, const bse::R
     bse::phx::BodyDesc bodyDesc;
     bodyDesc.flags |= BSE_BODYFLAG_STATIC;
     bodyDesc.shapesDescs.push_back(&polyDesc[i]);
-    bse::phx::Body* body = scene->createBody(&bodyDesc);
+    bse::phx::Body* body = scene->createBody(bodyDesc);
     body->setPosition(pos[i]);
   }
 }

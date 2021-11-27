@@ -61,7 +61,7 @@ void MinimalTest::initialize()
       shapeDesc.dims = boxDims;
       bodyDesc.shapesDescs.push_back(&shapeDesc);
 
-      scene->createBody(&bodyDesc);
+      scene->createBody(bodyDesc);
       position.y += boxDims.y;
       position.x += SOME_OFFSET_ON_X;
       position.y += SOME_OFFSET_ON_Y;
@@ -123,7 +123,7 @@ void StackTest::initialize()
       shapeDesc.dims = boxDims;
       bodyDesc.shapesDescs.push_back(&shapeDesc);
 
-      scene->createBody(&bodyDesc);
+      scene->createBody(bodyDesc);
 
       position.y += boxDims.y;
     }
@@ -182,7 +182,7 @@ void SAPTest::initialize()
 
       bodyDesc.shapesDescs.push_back(&shapeDesc);
 
-      scene->createBody(&bodyDesc);
+      scene->createBody(bodyDesc);
 
       position.x += (SPHERE_RADIUS*2+0.02f);
     }
@@ -272,7 +272,7 @@ void RayCastTest::initialize()
 
     // store the pointer to the shape descriptor. the shape is automatically created internally.
     bodyDesc.shapesDescs.push_back(&shapeDesc);
-    bse::phx::Body* body = scene->createBody(&bodyDesc);
+    bse::phx::Body* body = scene->createBody(bodyDesc);
     body->setUserData((void*)(size_t)(i+1));
 
     // generate a random initial velocity
@@ -430,7 +430,7 @@ void PyramidTest::initialize()
 
         position.x += (BOX_SIZE+0.02f);
 
-        scene->createBody(&bodyDesc);
+        scene->createBody(bodyDesc);
       }
       position.y += (BOX_SIZE + 0.015f);
     }
@@ -500,7 +500,7 @@ void PolygonsTest::initialize()
     polyBodyDesc.mass = 1;
     polyBodyDesc.shapesDescs.push_back(&polyDesc);
 
-    bse::phx::Body* polygonBody = scene->createBody(&polyBodyDesc);
+    bse::phx::Body* polygonBody = scene->createBody(polyBodyDesc);
     polygonBody->setPosition(pos);
     polygonBody->setOrientation(bseRandom(0.0f, bse_pi/2.0f));
     pos.x += X_POS_INCR;
@@ -561,14 +561,14 @@ void StressTest::initialize()
 
   // lower bound
   bodyDesc.shapesDescs.push_back(&x_boxDesc);
-  body = scene->createBody(&bodyDesc);
+  body = scene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x + sizeX / 2.0f, y-0.05f);
   m_lowerBoundBody = body;
 
   // left bound
   bodyDesc.shapesDescs.push_back(&y_boxDesc);
-  body = scene->createBody(&bodyDesc);
+  body = scene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setPosition(x - sizeY/2 * cos(bse_pi/4), y + sizeY/2.0f * (1 - 0.5f*sin(bse_pi/4)));
   body->setOrientation(bse_pi/4);
@@ -576,7 +576,7 @@ void StressTest::initialize()
 
   // right bound
   bodyDesc.shapesDescs.push_back(&y_boxDesc);
-  body = scene->createBody(&bodyDesc);
+  body = scene->createBody(bodyDesc);
   bodyDesc.shapesDescs.clear();
   body->setOrientation(-bse_pi/4);
   body->setPosition(x + sizeX + sizeY/2 * cos(bse_pi/4), y + sizeY/2.0f * (1 - 0.5f*sin(bse_pi/4)));
@@ -632,7 +632,7 @@ void StressTest::execute(float phxDt, float aiDt)
 
     bodyDesc.position = bse::Vec2(0, 1);
     bodyDesc.orientation = bseRandom(0.0f, bse_pi/4);
-    bse::phx::Body* body = scene->createBody(&bodyDesc);
+    bse::phx::Body* body = scene->createBody(bodyDesc);
     const float startVel = 0.5f;
     bse::Vec2 vel(bseRandom(-1.0f, 1.0f), bseRandom(-1.0f, 0.0f));
     vel.normalize();
@@ -753,7 +753,7 @@ void FrictionTest::initialize()
     bodyDesc.position.x += 0.5f;
     bodyDesc.shapesDescs.push_back(&boxDesc);
 
-    bse::phx::Body* body = scene->createBody(&bodyDesc);
+    bse::phx::Body* body = scene->createBody(bodyDesc);
     body->setMaterial(mat);
 
     pos.x -= dL * cOri;

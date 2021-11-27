@@ -303,7 +303,7 @@ public:
   void drawBodies(bse::phx::Scene* scene, bodyDrawFlags bFlags=BODY_DRAW_ALL, shapeDrawFlags sFlags=SHAPE_DRAW_ALL);
   void drawShapes(bse::phx::Scene* scene, shapeDrawFlags sFlags=SHAPE_DRAW_ALL);
   void drawRays(bse::phx::Scene* scene);
-  void drawAABB(const bse::phx::AABB* aabb, const Color& c);
+  void drawAABB(const bse::phx::AABB& aabb, const Color& c);
 
 };
 

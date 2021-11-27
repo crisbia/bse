@@ -352,7 +352,7 @@ void keyDown(unsigned char key, int x, int y)
       bombDesc.mass = 0.1f;
       bombDesc.position = bse::Vec2(-2,1);
 
-      bse::phx::Body* bomb = gScene->createBody(&bombDesc);
+      bse::phx::Body* bomb = gScene->createBody(bombDesc);
       bomb->setLinearVelocity(7.5, -0.1f);
     }
     break;

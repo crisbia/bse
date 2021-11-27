@@ -78,7 +78,7 @@ Brick::Brick(BricksGame* game, const BrickDesc& d) : BricksObj(game, BRICKSOBJ_B
 
   bodyDesc.position = desc.pos;
 
-  body = game->getPhysicsScene()->createBody(&bodyDesc);
+  body = game->getPhysicsScene()->createBody(bodyDesc);
   body->setUserData(this);
 
   hitsToDestroy = desc.initialHitsToDestroy;
@@ -112,7 +112,7 @@ Paddle::Paddle(BricksGame* game, const PaddleDesc& d) : BricksObj(game, BRICKSOB
   bodyDesc.flags |= BSE_BODYFLAG_STATIC;
   // store the pointer to the shape descriptor. the shape is automatically created internally.
   bodyDesc.shapesDescs.push_back(&shapeDesc);
-  body = game->getPhysicsScene()->createBody(&bodyDesc);
+  body = game->getPhysicsScene()->createBody(bodyDesc);
 
   // center the paddle
   body->setPosition(desc.pos);
@@ -139,7 +139,7 @@ Ball::Ball(BricksGame* game, const BallDesc& d) : BricksObj(game, BRICKSOBJ_BALL
   shapeDesc.radius = desc.size / 2.0f;
 
   bodyDesc.shapesDescs.push_back(&shapeDesc);
-  body = game->getPhysicsScene()->createBody(&bodyDesc);
+  body = game->getPhysicsScene()->createBody(bodyDesc);
   body->setUserData(this);
 }
 
@@ -157,7 +157,7 @@ Wall::Wall(BricksGame* game, const WallDesc& d) : BricksObj(game, BRICKSOBJ_WALL
   bse::phx::BodyDesc bodyDesc;
   bodyDesc.flags |= BSE_BODYFLAG_STATIC;
   bodyDesc.shapesDescs.push_back(&boxDesc);
-  body = game->getPhysicsScene()->createBody(&bodyDesc);
+  body = game->getPhysicsScene()->createBody(bodyDesc);
   body->setPosition(desc.pos);
   body->setUserData(this);
 }

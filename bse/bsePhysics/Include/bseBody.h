@@ -54,7 +54,7 @@ class Body
   friend class Scene;
   friend class Shape; // this allows shapes creation
 public:
-  static Body* create(Scene* scene, BodyDesc* desc);
+  static Body* create(Scene* scene, const BodyDesc& desc);
   static void destroyBody(Body* body);
   Scene* getScene() const { return m_scene; }
 
@@ -106,7 +106,7 @@ public:
   bse::Real getInertia() const { return m_inertia; }
   bse::Real getInvInertia() const { return m_invInertia; }
   
-  const AABB* getAABB() const { return &m_aabb; }
+  const AABB& getAABB() const { return m_aabb; }
   void getAABB(AABB& aabb) { aabb = m_aabb; }
 
   bool hasMoved() const { return m_hasMoved; }
@@ -137,13 +137,13 @@ public:
 
   void setMaterial(Material* mat);
 protected:
-  Body(Scene* scene, const BodyDesc* bodyDesc);
+  Body(Scene* scene, const BodyDesc& bodyDesc);
   virtual ~Body();
 
   void updateAABB();
 
   void addShape(Shape* shape);
-  void removeShape(Shape* shape);
+  void removeShape(const Shape* shape);
 
   bool m_shapesChanged;
   bool m_hasMoved;

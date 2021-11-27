@@ -11,11 +11,7 @@ namespace phx
 class AABB
 {
 public:
-  AABB() : 
-    low(0,0), 
-    high(0,0)
-  { 
-  }
+  AABB() = default;
 
   AABB(const bse::Vec2& l, const bse::Vec2& h) : 
     low(l), 
@@ -55,22 +51,19 @@ public:
     return true;
   }
 
-  bool intersect(const AABB* aabb) const
+  bool intersect(const AABB& aabb) const
   {
-    // A = this, B = other
-
-    // intersection (it should cover the containment as well)
-    if (high.x >= aabb->low.x && low.x <= aabb->high.x && high.y >= aabb->low.y && low.y <= aabb->high.y)
+    if (high.x >= aabb.low.x && low.x <= aabb.high.x && high.y >= aabb.low.y && low.y <= aabb.high.y)
       return true;
 
-    if (aabb->low.x >= high.x && aabb->high.x <= low.x && aabb->low.y >= high.y && aabb->high.y <= low.y)
+    if (aabb.low.x >= high.x && aabb.high.x <= low.x && aabb.low.y >= high.y && aabb.high.y <= low.y)
       return true;
 
     return false;
   }
 
-  bse::Vec2 low;
-  bse::Vec2 high;
+  bse::Vec2 low = bse::Vec2::Zero;
+  bse::Vec2 high = bse::Vec2::Zero;
 };
 
 }

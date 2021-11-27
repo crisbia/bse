@@ -8,6 +8,7 @@
 namespace bse
 {
 
+// TODO Port to std::bitset
 class BitField
 {
 public:
