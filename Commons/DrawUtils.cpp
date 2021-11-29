@@ -526,12 +526,12 @@ void buildVBO(unsigned int vertCount, float* verts, float* vertCols, unsigned in
 {
   // Generate And Bind The Vertex Buffer
 	glGenBuffers( 1, &vboVerts );					// Get A Valid Name
-	glBindBuffer( GL_ARRAY_BUFFER_ARB, vboVerts );			// Bind The Buffer
-	glBufferData( GL_ARRAY_BUFFER_ARB, vertCount*2*sizeof(float), verts, GL_STATIC_DRAW_ARB );
+	glBindBuffer( GL_ARRAY_BUFFER, vboVerts );			// Bind The Buffer
+	glBufferData( GL_ARRAY_BUFFER, vertCount*2*sizeof(float), verts, GL_STATIC_DRAW );
 
   glGenBuffers(1, &vboCols);
-  glBindBuffer( GL_ARRAY_BUFFER_ARB, vboCols );
-  glBufferData( GL_ARRAY_BUFFER_ARB, vertCount*3*sizeof(float), vertCols, GL_STATIC_DRAW_ARB );
+  glBindBuffer( GL_ARRAY_BUFFER, vboCols );
+  glBufferData( GL_ARRAY_BUFFER, vertCount*3*sizeof(float), vertCols, GL_STATIC_DRAW );
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -540,10 +540,10 @@ void renderVBO(unsigned int colVBO, unsigned int vertVBO, unsigned int vertCount
   glEnableClientState( GL_VERTEX_ARRAY );
   glEnableClientState( GL_COLOR_ARRAY );
 
-  glBindBufferARB( GL_ARRAY_BUFFER_ARB, colVBO );
+  glBindBuffer( GL_ARRAY_BUFFER, colVBO );
   glColorPointer( 3, GL_FLOAT, 0, 0);
 
-  glBindBufferARB( GL_ARRAY_BUFFER_ARB, vertVBO );
+  glBindBuffer( GL_ARRAY_BUFFER, vertVBO );
 	glVertexPointer( 2, GL_FLOAT, 0, 0);		// Set The Vertex Pointer To The Vertex Buffer
 
   glDrawArrays( GL_LINES, 0, vertCount );
