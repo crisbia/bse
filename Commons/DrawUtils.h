@@ -136,7 +136,6 @@ class RenderSceneDesc
 {
 public:
   RenderSceneDesc() :
-      windowTitle(0),
       windowHeight(1024), windowWidth(768), windowStartX(0), windowStartY(0),
       updateMode(RENDER_UPDATEMODE_TIMED), updateTiming(1000 / 60),
       keyboardFunc(0), keyboardFuncUp(0), keyboardSpecialFunc(0),
