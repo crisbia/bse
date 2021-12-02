@@ -425,6 +425,8 @@ void handlerFrame()
   {
     gRenderScene->customFrameFunc();
   }
+
+  glfwSwapBuffers(gRenderScene->mainWindow);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -471,6 +473,12 @@ void handlerReshape(GLFWwindow* window, int w, int h)
   float left, right, bottom, top;
   gRenderScene->getRenderArea(left, right, bottom, top);
 
+  // float aspectRatio = (float)w / (float)h;
+  // if (w >= h)
+  //   gluOrtho2D(left*aspectRatio, right*aspectRatio, bottom, top); 
+  // else 
+  //   gluOrtho2D(left, right, bottom, top/aspectRatio);
+
   gluOrtho2D(left, right, bottom, top);
 
   if (gRenderScene->customReshapeFunc)
@@ -513,9 +521,6 @@ void initDrawUtils(const RenderSceneDesc& desc)
     glfwGetFramebufferSize(gRenderScene->mainWindow, &width, &height);
     ratio = width / (float) height;
 
-    glViewport(0, 0, width, height);
-    glClear(GL_COLOR_BUFFER_BIT);
-
     // mat4x4_identity(m);
     // mat4x4_rotate_Z(m, m, (float) glfwGetTime());
     // mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
@@ -527,7 +532,7 @@ void initDrawUtils(const RenderSceneDesc& desc)
 
     handlerFrame();
 
-    glfwSwapBuffers(gRenderScene->mainWindow);
+    // glfwSwapBuffers(gRenderScene->mainWindow);
     glfwPollEvents();
   }
 }
