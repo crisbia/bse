@@ -1,12 +1,10 @@
 #ifndef _DRAWUTILS_H_INCLUDED
 #define _DRAWUTILS_H_INCLUDED
 
-#if defined(WIN32)
-#include <windows.h>
-#endif
-
 // TODO make platform independent. This is mac specific
 #include <OpenGL/gl.h>
+
+#include <GLFW/glfw3.h>
 
 #include "bseCommons.h"
 #include "bseMath.h"
@@ -192,7 +190,8 @@ public:
   RenderSceneDesc sceneDesc;
   CameraDesc      cameraDesc;
 
-  int mainWindow;
+  GLFWwindow* mainWindow;
+
   int width;
   int height;
   int tx, ty, tw, th;

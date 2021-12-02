@@ -1,5 +1,5 @@
 find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
+find_package(glfw3 REQUIRED)
 
 set(BSE_BRICK_SRC
     BrickBSE.cpp
@@ -7,7 +7,6 @@ set(BSE_BRICK_SRC
 )
 
 include_directories(
-    ${GLUT_INCLUDE_DIR}
     ${OPENGL_INCLUDE_DIRS}
     ../../bse/bseCommons/Include
     ../../bse/bsePhysics/Include
@@ -24,5 +23,5 @@ target_link_libraries(BrickBSE PUBLIC
     bsePhysics
     bseCommons
     ${OPENGL_LIBRARIES} 
-    ${GLUT_LIBRARY}
+    glfw
 )

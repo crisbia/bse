@@ -13,8 +13,7 @@
 
 #include <vector>
 
-// glut includes
-#include <glut.h>
+#include <GLFW/glfw3.h>
 
 // demo includes
 #include "DrawUtils.h"
@@ -113,24 +112,24 @@ void keyboardSpecialCallback( int key, int x, int y )
     pos = player->getPosition();
   }
 
-  switch (key)
-  {
-  case GLUT_KEY_LEFT:
-    pos.x -= INC_POS;
-    break;
+  // switch (key)
+  // {
+  // case GLUT_KEY_LEFT:
+  //   pos.x -= INC_POS;
+  //   break;
 
-  case GLUT_KEY_RIGHT:
-    pos.x += INC_POS;
-    break;
+  // case GLUT_KEY_RIGHT:
+  //   pos.x += INC_POS;
+  //   break;
 
-  case GLUT_KEY_UP:
-    pos.y += INC_POS;
-    break;
+  // case GLUT_KEY_UP:
+  //   pos.y += INC_POS;
+  //   break;
 
-  case GLUT_KEY_DOWN:
-    pos.y -= INC_POS;
-    break;
-  }
+  // case GLUT_KEY_DOWN:
+  //   pos.y -= INC_POS;
+  //   break;
+  // }
 
   // clamp pos
   gMaze->movePlayerTo(pos);
@@ -140,23 +139,23 @@ void keyboardSpecialCallback( int key, int x, int y )
 void keyboardUpSpecialCallback( int key, int x, int y )
 {
 
-  switch (key)
-  {
-    // Rotate Left
-  case GLUT_KEY_LEFT:
-    break;
+  // switch (key)
+  // {
+  //   // Rotate Left
+  // case GLUT_KEY_LEFT:
+  //   break;
 
-    // Rotate Right
-  case GLUT_KEY_RIGHT:
-    break;
+  //   // Rotate Right
+  // case GLUT_KEY_RIGHT:
+  //   break;
 
-    // Accelerate forward
-  case GLUT_KEY_UP:
-    break;
+  //   // Accelerate forward
+  // case GLUT_KEY_UP:
+  //   break;
 
-   case GLUT_KEY_DOWN:
-    break;
-  }
+  //  case GLUT_KEY_DOWN:
+  //   break;
+  // }
 }
 
 //---------------------------------------------------------------------------------------------------------------------

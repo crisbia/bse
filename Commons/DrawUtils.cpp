@@ -1,9 +1,17 @@
 #include "DrawUtils.h"
 #include "bsePhysics.h"
-#include <glut.h>
+
+#include <GLFW/glfw3.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
 #include "SysUtils.h"
 #include <stdarg.h>
 #include <stdio.h>
+
+#include <iostream>
+
+// render scene is a sort of singleton.
+static RenderScene* gRenderScene = 0;
 
 const bool bDrawNormals = false;
 
@@ -14,17 +22,20 @@ void handlerKeyboardUpSpecial(int, int, int);
 void handlerFrame(void);
 void handlerMouse(int, int, int, int);
 void handlerMouseMotion(int, int);
-void handlerReshape(int, int);
+void handlerReshape(GLFWwindow*, int, int);
 void handlerTimer(int t);
 
 //---------------------------------------------------------------------------------------------------------------------
 void drawColorString(int x, int y, const Color& col, const char *buffer)
 {
+  int w = 0;
+  int h = 0;
+  glfwGetFramebufferSize(gRenderScene->mainWindow, &w, &h);
+
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
-  int w = glutGet(GLUT_WINDOW_WIDTH);
-  int h = glutGet(GLUT_WINDOW_HEIGHT);
+
   gluOrtho2D(0, w, h, 0);
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
@@ -33,10 +44,10 @@ void drawColorString(int x, int y, const Color& col, const char *buffer)
   glColor3f(col.cx, col.cy, col.cz);
   glRasterPos2i(x, y);
   bse::Int length = (bse::Int)strlen(buffer);
-  for (bse::Int i = 0; i < length; ++i)
-  {
-    glutBitmapCharacter(GLUT_BITMAP_8_BY_13, buffer[i]);
-  }
+  // for (bse::Int i = 0; i < length; ++i)
+  // {
+  //   glutBitmapCharacter(GLUT_BITMAP_8_BY_13, buffer[i]);
+  // }
 
   glPopMatrix();
   glMatrixMode(GL_PROJECTION);
@@ -190,9 +201,6 @@ void drawArrowCharacter(const bse::Vec2& pos, const bse::Mat22& ori, const bse::
 //  drawPolygon(pos, ori, verts, c);
 }
 
-// render scene is a sort of singleton.
-static RenderScene* gRenderScene = 0;
-
 //---------------------------------------------------------------------------------------------------------------------
 RenderScene* RenderScene::createScene(const RenderSceneDesc* sceneDesc)
 {
@@ -224,36 +232,44 @@ RenderScene::RenderScene(const RenderSceneDesc* desc)
 //---------------------------------------------------------------------------------------------------------------------
 void handlerTimer(int t)
 {
-  glutSetWindow(gRenderScene->mainWindow);
-  glutPostRedisplay();
-  glutTimerFunc(gRenderScene->sceneDesc.updateTiming, handlerTimer, 0);
+  //glutSetWindow(gRenderScene->mainWindow);
+  //glutPostRedisplay();
+  //glutTimerFunc(gRenderScene->sceneDesc.updateTiming, handlerTimer, 0);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-int initGlutSystem(const RenderSceneDesc& sceneDesc)
+GLFWwindow* initGraphicsBackend(const RenderSceneDesc& sceneDesc)
 {
-  glutInit(const_cast<int *>(&sceneDesc.argc), sceneDesc.argv);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
-  glutInitWindowSize(sceneDesc.windowWidth, sceneDesc.windowHeight);
-  int mainWindow = glutCreateWindow(gRenderScene->windowTitle.c_str());
+  // glutInit(const_cast<int *>(&sceneDesc.argc), sceneDesc.argv);
+  // glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
+  // glutInitWindowSize(sceneDesc.windowWidth, sceneDesc.windowHeight);
+  // int mainWindow = glutCreateWindow(gRenderScene->windowTitle.c_str());
   //glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
-  glutDisplayFunc(handlerFrame);
-  glutReshapeFunc(handlerReshape);
-  glutKeyboardFunc(handlerKeyboard);
-  glutKeyboardUpFunc(handlerKeyboardUp);
-  glutSpecialFunc(handlerKeyboardSpecial);
-  glutSpecialUpFunc(handlerKeyboardUpSpecial);
-  glutMouseFunc(handlerMouse);
-  glutMotionFunc(handlerMouseMotion);
+  //glutDisplayFunc(handlerFrame);
+  //glutReshapeFunc(handlerReshape);
+
+  // glutKeyboardFunc(handlerKeyboard);
+  // glutKeyboardUpFunc(handlerKeyboardUp);
+  // glutSpecialFunc(handlerKeyboardSpecial);
+  // glutSpecialUpFunc(handlerKeyboardUpSpecial);
+  // glutMouseFunc(handlerMouse);
+  // glutMotionFunc(handlerMouseMotion);
 
   // Use a timer to control the frame rate.
-  if (sceneDesc.updateMode == RENDER_UPDATEMODE_TIMED)
-  {
-    glutTimerFunc(sceneDesc.updateTiming, handlerTimer, 0);
-  }
+  // if (sceneDesc.updateMode == RENDER_UPDATEMODE_TIMED)
+  // {
+  //   glutTimerFunc(sceneDesc.updateTiming, handlerTimer, 0);
+  // }
 
-  return mainWindow;
+  glfwInit();
+
+  GLFWwindow* window = glfwCreateWindow(sceneDesc.windowWidth, sceneDesc.windowHeight, sceneDesc.windowTitle.c_str(), nullptr, nullptr);
+
+  glfwMakeContextCurrent(window);
+  glfwSetFramebufferSizeCallback(window, handlerReshape);
+
+  return window;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -261,7 +277,7 @@ void RenderScene::setCameraPosition(float x, float y)
 {
   viewX = x;
   viewY = y;
-  handlerReshape(width, height);
+  handlerReshape(gRenderScene->mainWindow, width, height);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -304,14 +320,14 @@ void handlerKeyboard(unsigned char key, int x, int y )
       case 'a':
         gRenderScene->viewZoom =
           bseMax(gRenderScene->viewZoom - gRenderScene->cameraDesc.zoomTick, gRenderScene->cameraDesc.zoomMin);
-        handlerReshape(gRenderScene->width, gRenderScene->height);
+        handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
         break;
 
         // Press 'z' to zoom out.
       case 'z':
         gRenderScene->viewZoom =
           bseMin(gRenderScene->viewZoom + gRenderScene->cameraDesc.zoomTick, gRenderScene->cameraDesc.zoomMax);
-        handlerReshape(gRenderScene->width, gRenderScene->height);
+        handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
         break;
       default:
         break;
@@ -345,40 +361,40 @@ void handlerKeyboardSpecial( int key, int x, int y )
 {
   if (!gRenderScene->cameraDesc.fixed)
   {
-    switch (key)
-    {
-      // Press left to pan left.
-    case GLUT_KEY_LEFT:
-      gRenderScene->viewX += gRenderScene->cameraDesc.viewTick;
-      handlerReshape(gRenderScene->width, gRenderScene->height);
-      break;
+    // switch (key)
+    // {
+    //   // Press left to pan left.
+    // case GLUT_KEY_LEFT:
+    //   gRenderScene->viewX += gRenderScene->cameraDesc.viewTick;
+    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+    //   break;
 
-      // Press right to pan right.
-    case GLUT_KEY_RIGHT:
-      gRenderScene->viewX -= gRenderScene->cameraDesc.viewTick;
-      handlerReshape(gRenderScene->width, gRenderScene->height);
-      break;
+    //   // Press right to pan right.
+    // case GLUT_KEY_RIGHT:
+    //   gRenderScene->viewX -= gRenderScene->cameraDesc.viewTick;
+    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+    //   break;
 
-      // Press down to pan down.
-    case GLUT_KEY_DOWN:
-      gRenderScene->viewY += gRenderScene->cameraDesc.viewTick;
-      handlerReshape(gRenderScene->width, gRenderScene->height);
-      break;
+    //   // Press down to pan down.
+    // case GLUT_KEY_DOWN:
+    //   gRenderScene->viewY += gRenderScene->cameraDesc.viewTick;
+    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+    //   break;
 
-      // Press up to pan up.
-    case GLUT_KEY_UP:
-      gRenderScene->viewY -= gRenderScene->cameraDesc.viewTick;
-      handlerReshape(gRenderScene->width, gRenderScene->height);
-      break;
+    //   // Press up to pan up.
+    // case GLUT_KEY_UP:
+    //   gRenderScene->viewY -= gRenderScene->cameraDesc.viewTick;
+    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+    //   break;
 
-      // Press home to reset the view.
-    case GLUT_KEY_HOME:
-      gRenderScene->viewZoom = gRenderScene->cameraDesc.startZoom;
-      gRenderScene->viewX = gRenderScene->cameraDesc.startX;
-      gRenderScene->viewY = gRenderScene->cameraDesc.startY;
-      handlerReshape(gRenderScene->width, gRenderScene->height);
-      break;
-    }
+    //   // Press home to reset the view.
+    // case GLUT_KEY_HOME:
+    //   gRenderScene->viewZoom = gRenderScene->cameraDesc.startZoom;
+    //   gRenderScene->viewX = gRenderScene->cameraDesc.startX;
+    //   gRenderScene->viewY = gRenderScene->cameraDesc.startY;
+    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+    //   break;
+    // }
   }
 
   if (gRenderScene->customKeyboardSpecialFunc)
@@ -397,7 +413,7 @@ void handlerKeyboardUpSpecial( int key, int x, int y )
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void handlerFrame( void )
+void handlerFrame()
 {
   // start scene render
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -409,9 +425,6 @@ void handlerFrame( void )
   {
     gRenderScene->customFrameFunc();
   }
-
-  // end scene render
-  glutSwapBuffers();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -433,15 +446,17 @@ void handlerMouseMotion(int x, int y)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void handlerReshape( int w, int h )
+void handlerReshape(GLFWwindow* window, int w, int h)
 {
   gRenderScene->width = w;
   gRenderScene->height = h;
 
   int curr_x = 0;
   int curr_y = 0;
-  int curr_w = glutGet( GLUT_WINDOW_WIDTH );
-  int curr_h = glutGet( GLUT_WINDOW_HEIGHT );
+  int curr_w = 0;
+  int curr_h = 0;
+
+  glfwGetFramebufferSize(gRenderScene->mainWindow, &curr_w, &curr_h);
 
   gRenderScene->tx = curr_x;
   gRenderScene->ty = curr_y;
@@ -462,6 +477,8 @@ void handlerReshape( int w, int h )
   {
     gRenderScene->customReshapeFunc(w,h);
   }
+
+  handlerFrame();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -479,8 +496,40 @@ void initDrawUtils(const RenderSceneDesc& desc)
 {
   gRenderScene = RenderScene::createScene(&desc);
 
-  gRenderScene->mainWindow = initGlutSystem(desc);
-  glutMainLoop();
+  gRenderScene->mainWindow = initGraphicsBackend(desc);
+
+  glfwMakeContextCurrent(gRenderScene->mainWindow);
+
+  int width, height;
+  glfwGetFramebufferSize(gRenderScene->mainWindow, &width, &height);
+
+  handlerReshape(gRenderScene->mainWindow, width, height);
+
+  while (!glfwWindowShouldClose(gRenderScene->mainWindow))
+  {
+    float ratio;
+    //mat4x4 m, p, mvp;
+ 
+    glfwGetFramebufferSize(gRenderScene->mainWindow, &width, &height);
+    ratio = width / (float) height;
+
+    glViewport(0, 0, width, height);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // mat4x4_identity(m);
+    // mat4x4_rotate_Z(m, m, (float) glfwGetTime());
+    // mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+    // mat4x4_mul(mvp, p, m);
+
+    // glUseProgram(program);
+    // glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
+    // glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    handlerFrame();
+
+    glfwSwapBuffers(gRenderScene->mainWindow);
+    glfwPollEvents();
+  }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -634,20 +683,22 @@ void TextManager::drawText(const Color& col, const char *string, ...)
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	int w = glutGet(GLUT_WINDOW_WIDTH);
-	int h = glutGet(GLUT_WINDOW_HEIGHT);
+	int w = 0;
+	int h = 0;
+  glfwGetFramebufferSize(gRenderScene->mainWindow, &w, &h);
+
 	gluOrtho2D(0, w, h, 0);
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
 
-    glColor3f(col.cx, col.cy, col.cz);
+  glColor3f(col.cx, col.cy, col.cz);
 	glRasterPos2i(x, y);
 	bse::Int length = (bse::Int)strlen(buffer);
-	for (bse::Int i = 0; i < length; ++i)
-	{
-		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, buffer[i]);
-	}
+	// for (bse::Int i = 0; i < length; ++i)
+	// {
+	// 	glutBitmapCharacter(GLUT_BITMAP_8_BY_13, buffer[i]);
+	// }
 
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);

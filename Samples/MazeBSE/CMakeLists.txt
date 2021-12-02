@@ -1,5 +1,5 @@
 find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
+find_package(glfw3 REQUIRED)
 
 set(BSE_MAZE_SRC
     main.cpp
@@ -9,7 +9,6 @@ set(BSE_MAZE_SRC
 )
 
 include_directories(
-    ${GLUT_INCLUDE_DIR}
     ${OPENGL_INCLUDE_DIRS}
     ../../bse/bseCommons/Include
     ../../bse/bsePhysics/Include
@@ -27,5 +26,5 @@ target_link_libraries(MazeBSE PUBLIC
     bseCommons
     bseAI
     ${OPENGL_LIBRARIES} 
-    ${GLUT_LIBRARY}
+    glfw
 )

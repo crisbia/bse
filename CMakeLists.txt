@@ -10,4 +10,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_subdirectory(bse)
 
 add_subdirectory(Samples)
-add_subdirectory(BSEDemo)
+#add_subdirectory(BSEDemo)

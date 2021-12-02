@@ -18,8 +18,6 @@
 #include <vector>
 #include <list>
 
-// glut includes
-#include <glut.h>
 // demo includes
 #include "DrawUtils.h"
 

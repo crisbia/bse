@@ -17,9 +17,6 @@
 
 #include <vector>
 
-// glut includes
-#include <glut.h>
-
 // bse includes
 #include "bsePhysics.h"
 #include "bseKinematicAgent.h"
@@ -631,15 +628,15 @@ void keyboardSpecialCallback( int key, int x, int y )
 {
   if (!gBricksGame->aiPaddle && !gBricksGame->gameOver)
   {
-    switch (key)
-    {
-    case GLUT_KEY_LEFT:
-      gBricksGame->movePaddle(-PADDLE_SPEED);
-      break;
-    case GLUT_KEY_RIGHT:
-      gBricksGame->movePaddle(PADDLE_SPEED);
-      break;
-    }
+    // switch (key)
+    // {
+    // case GLUT_KEY_LEFT:
+    //   gBricksGame->movePaddle(-PADDLE_SPEED);
+    //   break;
+    // case GLUT_KEY_RIGHT:
+    //   gBricksGame->movePaddle(PADDLE_SPEED);
+    //   break;
+    // }
   }
 }
 
