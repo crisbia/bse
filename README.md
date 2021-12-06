@@ -1,8 +1,11 @@
+**NB: This project is going through some modernization work at the moment. The version on 'main' is an initial drop of some pretty old code in an unstable state.**
+
+
 **BSE – Bi-dimensional Simulation Environment**
 
 **Platform**
 
-Tested on Linux\_x86
+Tested on MacOS. More platforms coming soon.
 
 **Overview**
 
