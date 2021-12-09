@@ -1,4 +1,4 @@
-**NB: This project is going through some modernization work at the moment. The version on 'main' is an initial drop of some pretty old code in an unstable state.**
+**NB: This project is going through some modernization work at the moment. The version on 'main' is an initial drop of some pretty old code in an unstable state. The code mostly originated around 2007, years before the C++11 standard was finalized.**
 
 
 **BSE – Bi-dimensional Simulation Environment**
