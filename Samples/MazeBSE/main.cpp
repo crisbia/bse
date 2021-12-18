@@ -64,98 +64,64 @@ float totalAITime = 0;
 int numSteps = 0;
 
 //---------------------------------------------------------------------------------------------------------------------
-void keyboardCallback(unsigned char key, int x, int y)
+void keyboardCallback(int key, int action, int x, int y)
 {
-  switch (key)
+  if (action == GLFW_PRESS)
   {
-  case '1':
-    gMaze->setAsynchPathFinder(!gMaze->isAsynchPathFinderEnabled());
-	totalAITime = 0;
-	numSteps = 0;
-	break;
-  case '2':
-    gMaze->reset(gTaskScheduler);
-	totalAITime = 0;
-	numSteps = 0;
+    switch (key)
+    {
+    case '1':
+      gMaze->setAsynchPathFinder(!gMaze->isAsynchPathFinderEnabled());
+      totalAITime = 0;
+      numSteps = 0;
     break;
-  case '+':
-    increaseNumberOfWorkers();
-    break;
-  case '-':
-    decreaseNumberOfWorkers();
-    break;
-  case ' ':
-    break;
+    case '2':
+      gMaze->reset(gTaskScheduler);
+      totalAITime = 0;
+      numSteps = 0;
+      break;
+    case '+':
+      increaseNumberOfWorkers();
+      break;
+    case '-':
+      decreaseNumberOfWorkers();
+      break;
+    case ' ':
+      break;
+    }
+
+    PlayerCharacter* player = 0;
+    bse::Vec2 pos(0,0);
+    const bse::Real INC_POS = 0.025f;
+
+    if (gMaze && gMaze->getMainPlayer())
+    {
+      player = gMaze->getMainPlayer();
+      pos = player->getPosition();
+    }
+
+    switch (key)
+    {
+    case GLFW_KEY_LEFT:
+      pos.x -= INC_POS;
+      break;
+
+    case GLFW_KEY_RIGHT:
+      pos.x += INC_POS;
+      break;
+
+    case GLFW_KEY_UP:
+      pos.y += INC_POS;
+      break;
+
+    case GLFW_KEY_DOWN:
+      pos.y -= INC_POS;
+      break;
+    }
+
+    // clamp pos
+    gMaze->movePlayerTo(pos);
   }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void keyboardUpCallback(unsigned char key, int x, int y)
-{
-  switch (key)
-  {
-  case ' ':
-    break;
-  }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void keyboardSpecialCallback( int key, int x, int y )
-{
-  PlayerCharacter* player = 0;
-  bse::Vec2 pos(0,0);
-  const bse::Real INC_POS = 0.025f;
-
-  if (gMaze && gMaze->getMainPlayer())
-  {
-    player = gMaze->getMainPlayer();
-    pos = player->getPosition();
-  }
-
-  // switch (key)
-  // {
-  // case GLUT_KEY_LEFT:
-  //   pos.x -= INC_POS;
-  //   break;
-
-  // case GLUT_KEY_RIGHT:
-  //   pos.x += INC_POS;
-  //   break;
-
-  // case GLUT_KEY_UP:
-  //   pos.y += INC_POS;
-  //   break;
-
-  // case GLUT_KEY_DOWN:
-  //   pos.y -= INC_POS;
-  //   break;
-  // }
-
-  // clamp pos
-  gMaze->movePlayerTo(pos);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void keyboardUpSpecialCallback( int key, int x, int y )
-{
-
-  // switch (key)
-  // {
-  //   // Rotate Left
-  // case GLUT_KEY_LEFT:
-  //   break;
-
-  //   // Rotate Right
-  // case GLUT_KEY_RIGHT:
-  //   break;
-
-  //   // Accelerate forward
-  // case GLUT_KEY_UP:
-  //   break;
-
-  //  case GLUT_KEY_DOWN:
-  //   break;
-  // }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -289,12 +255,9 @@ void initGraphics(int argc, char** argv)
   renderSceneDesc.windowStartY = 0;
   renderSceneDesc.updateMode = RENDER_UPDATEMODE_TIMED; // RENDER_UPDATEMODE_CONTINUOS; // RENDER_UPDATEMODE_MANUAL;
   renderSceneDesc.updateTiming = 1000 / 60; // ms
-    // setup callbacks
+  // setup callbacks
   renderSceneDesc.keyboardFunc = keyboardCallback;
-  renderSceneDesc.keyboardFuncUp = keyboardUpCallback;
   renderSceneDesc.frameFunc = frameCallback; // paint
-  renderSceneDesc.keyboardSpecialFunc = keyboardSpecialCallback;
-  renderSceneDesc.keyboardSpecialFuncUp = keyboardUpSpecialCallback;
   renderSceneDesc.mouseFunc = mouseCallback;
   renderSceneDesc.mouseMotionFunc = mouseMotionCallback;
   renderSceneDesc.shutdownFunc = shutDownGame;

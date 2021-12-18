@@ -15,7 +15,8 @@ static RenderScene* gRenderScene = 0;
 
 const bool bDrawNormals = false;
 
-void handlerKeyboard(unsigned char, int, int);
+void handlerKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods);
+
 void handlerKeyboardUp(unsigned char, int, int);
 void handlerKeyboardSpecial(int, int, int);
 void handlerKeyboardUpSpecial(int, int, int);
@@ -215,9 +216,6 @@ RenderScene::RenderScene(const RenderSceneDesc* desc)
   windowTitle = sceneDesc.windowTitle;
 
   customKeyboardFunc = sceneDesc.keyboardFunc;
-  customKeyboardUpFunc = sceneDesc.keyboardFuncUp;
-  customKeyboardSpecialFunc = sceneDesc.keyboardSpecialFunc;
-  customKeyboardUpSpecialFunc = sceneDesc.keyboardSpecialFuncUp;
   customFrameFunc = sceneDesc.frameFunc;
   customMouseFunc = sceneDesc.mouseFunc;
   customMouseMotionFunc = sceneDesc.mouseMotionFunc;
@@ -240,14 +238,7 @@ void handlerTimer(int t)
 //---------------------------------------------------------------------------------------------------------------------
 GLFWwindow* initGraphicsBackend(const RenderSceneDesc& sceneDesc)
 {
-  // glutInit(const_cast<int *>(&sceneDesc.argc), sceneDesc.argv);
-  // glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
-  // glutInitWindowSize(sceneDesc.windowWidth, sceneDesc.windowHeight);
-  // int mainWindow = glutCreateWindow(gRenderScene->windowTitle.c_str());
   //glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-
-  //glutDisplayFunc(handlerFrame);
-  //glutReshapeFunc(handlerReshape);
 
   // glutKeyboardFunc(handlerKeyboard);
   // glutKeyboardUpFunc(handlerKeyboardUp);
@@ -268,6 +259,7 @@ GLFWwindow* initGraphicsBackend(const RenderSceneDesc& sceneDesc)
 
   glfwMakeContextCurrent(window);
   glfwSetFramebufferSizeCallback(window, handlerReshape);
+  glfwSetKeyCallback(window, handlerKeyboard);
 
   return window;
 }
@@ -306,109 +298,71 @@ void RenderScene::getSceneBounds(bse::Vec2& lower, bse::Vec2& higher)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void handlerKeyboard(unsigned char key, int x, int y )
+void handlerKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (gRenderScene->customKeyboardFunc)
   {
-    gRenderScene->customKeyboardFunc(key, x, y);
+    gRenderScene->customKeyboardFunc(key, action, 0, 0); //x, y);
   }
 
-  if (!gRenderScene->cameraDesc.fixed || !gRenderScene->cameraDesc.zoomFixed)
+  if (action == GLFW_PRESS)
   {
+    if (!gRenderScene->cameraDesc.fixed)
+    {
+      switch (key)
+      {
+        case GLFW_KEY_A:
+          gRenderScene->viewZoom =
+            bseMax(gRenderScene->viewZoom - gRenderScene->cameraDesc.zoomTick, gRenderScene->cameraDesc.zoomMin);
+          handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+          break;
+
+          // Press 'z' to zoom out.
+        case GLFW_KEY_Z:
+          gRenderScene->viewZoom =
+            bseMin(gRenderScene->viewZoom + gRenderScene->cameraDesc.zoomTick, gRenderScene->cameraDesc.zoomMax);
+          handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+          break;
+        case GLFW_KEY_LEFT:
+          gRenderScene->viewX += gRenderScene->cameraDesc.viewTick;
+          handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+          break;
+          // Press right to pan right.
+        case GLFW_KEY_RIGHT:
+          gRenderScene->viewX -= gRenderScene->cameraDesc.viewTick;
+          handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+          break;
+          // Press down to pan down.
+        case GLFW_KEY_DOWN:
+          gRenderScene->viewY += gRenderScene->cameraDesc.viewTick;
+          handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+          break;
+          // Press up to pan up.
+        case GLFW_KEY_UP:
+          gRenderScene->viewY -= gRenderScene->cameraDesc.viewTick;
+          handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+          break;
+          // Press home to reset the view.
+        case GLFW_KEY_HOME:
+          gRenderScene->viewZoom = gRenderScene->cameraDesc.startZoom;
+          gRenderScene->viewX = gRenderScene->cameraDesc.startX;
+          gRenderScene->viewY = gRenderScene->cameraDesc.startY;
+          handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
+          break;
+      }
+    }
     switch (key)
     {
-      case 'a':
-        gRenderScene->viewZoom =
-          bseMax(gRenderScene->viewZoom - gRenderScene->cameraDesc.zoomTick, gRenderScene->cameraDesc.zoomMin);
-        handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
-        break;
-
-        // Press 'z' to zoom out.
-      case 'z':
-        gRenderScene->viewZoom =
-          bseMin(gRenderScene->viewZoom + gRenderScene->cameraDesc.zoomTick, gRenderScene->cameraDesc.zoomMax);
-        handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
-        break;
-      default:
-        break;
+    case GLFW_KEY_ESCAPE:
+      if (gRenderScene->customShutdownFunc)
+      {
+        gRenderScene->customShutdownFunc();
+      }
+      shutdownDrawUtils();
+      exit(0);
+      break;
     }
-  }
-  switch (key)
-  {
-  case 27:
-    if (gRenderScene->customShutdownFunc)
-    {
-      gRenderScene->customShutdownFunc();
-    }
-    shutdownDrawUtils();
-    exit(0);
-    break;
-    // Press 'a' to zoom in.
-  }
-}
 
-//---------------------------------------------------------------------------------------------------------------------
-void handlerKeyboardUp(unsigned char key, int x, int y )
-{
-  if (gRenderScene->customKeyboardUpFunc)
-  {
-    gRenderScene->customKeyboardUpFunc(key, x, y);
-  }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void handlerKeyboardSpecial( int key, int x, int y )
-{
-  if (!gRenderScene->cameraDesc.fixed)
-  {
-    // switch (key)
-    // {
-    //   // Press left to pan left.
-    // case GLUT_KEY_LEFT:
-    //   gRenderScene->viewX += gRenderScene->cameraDesc.viewTick;
-    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
-    //   break;
-
-    //   // Press right to pan right.
-    // case GLUT_KEY_RIGHT:
-    //   gRenderScene->viewX -= gRenderScene->cameraDesc.viewTick;
-    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
-    //   break;
-
-    //   // Press down to pan down.
-    // case GLUT_KEY_DOWN:
-    //   gRenderScene->viewY += gRenderScene->cameraDesc.viewTick;
-    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
-    //   break;
-
-    //   // Press up to pan up.
-    // case GLUT_KEY_UP:
-    //   gRenderScene->viewY -= gRenderScene->cameraDesc.viewTick;
-    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
-    //   break;
-
-    //   // Press home to reset the view.
-    // case GLUT_KEY_HOME:
-    //   gRenderScene->viewZoom = gRenderScene->cameraDesc.startZoom;
-    //   gRenderScene->viewX = gRenderScene->cameraDesc.startX;
-    //   gRenderScene->viewY = gRenderScene->cameraDesc.startY;
-    //   handlerReshape(gRenderScene->mainWindow, gRenderScene->width, gRenderScene->height);
-    //   break;
-    // }
-  }
-
-  if (gRenderScene->customKeyboardSpecialFunc)
-  {
-    gRenderScene->customKeyboardSpecialFunc(key, x, y);
-  }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void handlerKeyboardUpSpecial( int key, int x, int y )
-{
-  if (gRenderScene->customKeyboardUpSpecialFunc)
-  {
-    gRenderScene->customKeyboardUpSpecialFunc(key, x, y);
   }
 }
 
@@ -515,24 +469,11 @@ void initDrawUtils(const RenderSceneDesc& desc)
 
   while (!glfwWindowShouldClose(gRenderScene->mainWindow))
   {
-    float ratio;
-    //mat4x4 m, p, mvp;
- 
-    glfwGetFramebufferSize(gRenderScene->mainWindow, &width, &height);
-    ratio = width / (float) height;
-
-    // mat4x4_identity(m);
-    // mat4x4_rotate_Z(m, m, (float) glfwGetTime());
-    // mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-    // mat4x4_mul(mvp, p, m);
-
-    // glUseProgram(program);
-    // glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
-    // glDrawArrays(GL_TRIANGLES, 0, 3);
+     glfwGetFramebufferSize(gRenderScene->mainWindow, &width, &height);
+    float ratio = width / (float) height;
 
     handlerFrame();
 
-    // glfwSwapBuffers(gRenderScene->mainWindow);
     glfwPollEvents();
   }
 }

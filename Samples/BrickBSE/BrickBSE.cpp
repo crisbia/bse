@@ -600,43 +600,43 @@ BricksGame* gBricksGame = 0;
 void initGame();
 void shutDownGame();
 
-void keyboardCallback(unsigned char key, int x, int y)
+void keyboardCallback(int key, int action, int x, int y)
 {
-  switch (key)
+  if (action == GLFW_PRESS)
   {
-  case ' ':
+    if (!gBricksGame->aiPaddle && !gBricksGame->gameOver)
     {
-      if (!gBricksGame->gameOver)
+      switch (key)
       {
-        gBricksGame->throwBall();
-      }
-      else
-      {
-        // restart
-        shutDownGame();
-        initGame();
+      // case GLUT_KEY_LEFT:
+      //   gBricksGame->movePaddle(-PADDLE_SPEED);
+      //   break;
+      // case GLUT_KEY_RIGHT:
+      //   gBricksGame->movePaddle(PADDLE_SPEED);
+      //   break;
       }
     }
-    break;
-  case 'q':
-    gBricksGame->aiPaddle = !gBricksGame->aiPaddle;
-    break;
-  }
-}
 
-void keyboardSpecialCallback( int key, int x, int y )
-{
-  if (!gBricksGame->aiPaddle && !gBricksGame->gameOver)
-  {
-    // switch (key)
-    // {
-    // case GLUT_KEY_LEFT:
-    //   gBricksGame->movePaddle(-PADDLE_SPEED);
-    //   break;
-    // case GLUT_KEY_RIGHT:
-    //   gBricksGame->movePaddle(PADDLE_SPEED);
-    //   break;
-    // }
+    switch (key)
+    {
+    case ' ':
+      {
+        if (!gBricksGame->gameOver)
+        {
+          gBricksGame->throwBall();
+        }
+        else
+        {
+          // restart
+          shutDownGame();
+          initGame();
+        }
+      }
+      break;
+    case 'q':
+      gBricksGame->aiPaddle = !gBricksGame->aiPaddle;
+      break;
+    }
   }
 }
 
@@ -789,7 +789,6 @@ void initGraphics(int argc, char** argv)
     // setup callbacks
   renderSceneDesc.keyboardFunc = keyboardCallback;
   renderSceneDesc.frameFunc = frameCallback; // paint
-  renderSceneDesc.keyboardSpecialFunc = keyboardSpecialCallback;
   renderSceneDesc.mouseFunc = mouseCallback;
   renderSceneDesc.mouseMotionFunc = mouseMotionCallback;
   renderSceneDesc.shutdownFunc = shutDownGame;

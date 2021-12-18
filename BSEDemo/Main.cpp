@@ -9,9 +9,6 @@
 #include <stdio.h>
 #include <vector>
 
-// glut includes
-#include <glut.h>
-
 // demo includes
 #include "DrawUtils.h"
 #include "BSEDemo.h"
@@ -25,6 +22,10 @@
 #include "TestUtils.h"
 
 #include "SysUtils.h"
+
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+
 
 class SimpleLogger : public BSEDemo::Logger
 {
@@ -123,15 +124,10 @@ void reshape(bse::Int w, bse::Int h)
   width = w;
   height = h;
 
-  bse::Int curr_x = 0;
-  bse::Int curr_y = 0;
-  bse::Int curr_w = glutGet( GLUT_WINDOW_WIDTH );
-  bse::Int curr_h = glutGet( GLUT_WINDOW_HEIGHT );
-
-  tx = curr_x;
-  ty = curr_y;
-  tw = curr_w;
-  th = curr_h;
+  tx = 0;
+  ty = 0;
+  tw = width;
+  th = height;
 
   glViewport( tx, ty, tw, th );
 
@@ -160,9 +156,9 @@ bse::Vec2 screenToWorld(bse::Int x, bse::Int y)
 // This is used to control the frame rate (60Hz).
 void timerCallback(int)
 {
-  glutSetWindow(mainWindow);
-  glutPostRedisplay();
-  glutTimerFunc(framePeriod, timerCallback, 0);
+  // glutSetWindow(mainWindow);
+  // glutPostRedisplay();
+  // glutTimerFunc(framePeriod, timerCallback, 0);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -291,142 +287,78 @@ void redraw()
     base += offset;
   }
 
-  glutSwapBuffers();
-
   // Reset some internal state variables.
   gInputControl.update();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void keyUp(unsigned char key, int x, int y)
+void keyboard(int key, int scancode, int action, int mods)
 {
-  gInputControl.keyUp(key);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void keyDown(unsigned char key, int x, int y)
-{
-  gInputControl.keyDown(key);
-
-  switch (key)
+  if (action == GLFW_RELEASE)
   {
-    // Shutdown the test manager and exit the application.
-  case 27:
-    BSEDemo::shutDownTestManager();
-    destroyDefaultScene();
-    bse::toolsShutDown();
-    exit(0);
-    break;
-
-    // Render options.
-  case 'd':
-    updateDrawFlags();
-    break;
-
-    // Zoom in.
-  case 'a':
-    viewZoom = bseMax(viewZoom - 0.1f, 0.1f);
-    reshape(width, height);
-    break;
-
-    // Zoom out.
-  case 'z':
-    viewZoom = bseMin(viewZoom + 0.1f, 100.0f);
-    reshape(width, height);
-    break;
-
-  case 'r':
-    BSEDemo::gTestManager->restartCurrentTest();
-    break;
-
-  case 'p':
-    g_bPaused = !g_bPaused;
-    break;
-  case 'b':
-    {
-      bse::phx::CircleDesc desc;
-      desc.radius = 0.05f;
-
-      bse::phx::BodyDesc bombDesc;
-      bombDesc.shapesDescs.push_back(&desc);
-      bombDesc.mass = 0.1f;
-      bombDesc.position = bse::Vec2(-2,1);
-
-      bse::phx::Body* bomb = gScene->createBody(bombDesc);
-      bomb->setLinearVelocity(7.5, -0.1f);
-    }
-    break;
-
-    // Press space to change test.
-  case ' ':
-    {
-      BSEDemo::gTestManager->startNextTest();
-    }
-    break;
-  case '1':
-    {
-      updatePhysics(1.0f/60.0f);
-    }
-    break;
-  case '3':
-    {
-      BSEDemo::gTestManager->activateNextTool();
-    }
-    break;
-  default:
-    break;
+    gInputControl.keyUp(key);
   }
-}
 
-//---------------------------------------------------------------------------------------------------------------------
-void keyDownSpecial(int key, int x, int y)
-{
-  switch (key)
+  if (action == GLFW_PRESS)
   {
-  case GLUT_KEY_LEFT:
-    viewX += 0.1f;
-    reshape(width, height);
-    break;
+    gInputControl.keyDown(key);
 
-  case GLUT_KEY_RIGHT:
-    viewX -= 0.1f;
-    reshape(width, height);
-    break;
+    switch (key)
+    {
+      // Shutdown the test manager and exit the application.
+    case GLFW_KEY_ESCAPE:
+      BSEDemo::shutDownTestManager();
+      destroyDefaultScene();
+      bse::toolsShutDown();
+      exit(0);
+      break;
 
-  case GLUT_KEY_DOWN:
-    viewY += 0.1f;
-    reshape(width, height);
-    break;
+      // Render options.
+    case GLFW_KEY_D:
+      updateDrawFlags();
+      break;
 
-  case GLUT_KEY_UP:
-    viewY -= 0.1f;
-    reshape(width, height);
-    break;
+    case GLFW_KEY_R:
+      BSEDemo::gTestManager->restartCurrentTest();
+      break;
 
-  case GLUT_KEY_HOME:
-    viewZoom = 20.0f;
-    viewX = 0.0f;
-    viewY = 0.0f;
-    reshape(width, height);
-    break;
-  }
-}
+    case GLFW_KEY_P:
+      g_bPaused = !g_bPaused;
+      break;
+    case GLFW_KEY_B:
+      {
+        bse::phx::CircleDesc desc;
+        desc.radius = 0.05f;
 
-//---------------------------------------------------------------------------------------------------------------------
-void keyUpSpecial(int key, int x, int y)
-{
-  switch (key)
-  {
-  case GLUT_KEY_LEFT:
-    break;
-  case GLUT_KEY_RIGHT:
-    break;
-  case GLUT_KEY_DOWN:
-    break;
-  case GLUT_KEY_UP:
-    break;
-  case GLUT_KEY_HOME:
-    break;
+        bse::phx::BodyDesc bombDesc;
+        bombDesc.shapesDescs.push_back(&desc);
+        bombDesc.mass = 0.1f;
+        bombDesc.position = bse::Vec2(-2,1);
+
+        bse::phx::Body* bomb = gScene->createBody(bombDesc);
+        bomb->setLinearVelocity(7.5, -0.1f);
+      }
+      break;
+
+      // Press space to change test.
+    case GLFW_KEY_SPACE:
+      {
+        BSEDemo::gTestManager->startNextTest();
+      }
+      break;
+    case GLFW_KEY_1:
+      {
+        updatePhysics(1.0f/60.0f);
+      }
+      break;
+    case GLFW_KEY_3:
+      {
+        BSEDemo::gTestManager->activateNextTool();
+      }
+      break;
+    default:
+      break;
+    }
   }
 }
 
@@ -511,31 +443,6 @@ int main(int argc, char** argv)
 
   createDefaultScene();
 
-//////////// setup glut
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
-  glutInitWindowSize(width, height);
-  mainWindow = glutCreateWindow("bse demo");
-
-  // This function is freeglut specific, not glut standard.
-#if 0
-  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-#endif
-
-  glutDisplayFunc(redraw);
-  glutReshapeFunc(reshape);
-  glutKeyboardFunc(keyDown);
-  glutKeyboardUpFunc(keyUp);
-  glutSpecialFunc(keyDownSpecial);
-  glutSpecialUpFunc(keyUpSpecial);
-  glutMouseFunc(mouseButton);
-  glutMotionFunc(activeMouseMotion);         // active motion, fired when a button is pressed and there's motion.
-  glutPassiveMotionFunc(passiveMouseMotion); // passive motion.
-
-  // Use a timer to control the frame rate.
-  glutTimerFunc(framePeriod, timerCallback, 0);
-
-
   BSEDemo::TestManagerSetup testMgrSetup;
   testMgrSetup.physicsScene = gScene;
   testMgrSetup.debugDraw = &gDebugDraw;
@@ -547,10 +454,25 @@ int main(int argc, char** argv)
 
   BSEDemo::gTestManager->startTest(BSEDemo::TEST_ID_BODIES_STACK);
 
-//  BSEDemo::gTestManager->startTest(BSEDemo::TEST_ID_STRESS_TEST);
-//  BSEDemo::gTestManager->startTest(BSEDemo::TEST_ID_FRICTION);
+  RenderSceneDesc renderSceneDesc;
+  renderSceneDesc.argc = argc;
+  renderSceneDesc.argv = argv;
+  renderSceneDesc.windowTitle = "bse demo";
+  renderSceneDesc.windowHeight = height;
+  renderSceneDesc.windowWidth = width;
+  renderSceneDesc.windowStartX = 0;
+  renderSceneDesc.windowStartY = 0;
+  renderSceneDesc.updateMode = RENDER_UPDATEMODE_TIMED; // RENDER_UPDATEMODE_CONTINUOS; // RENDER_UPDATEMODE_MANUAL;
+  renderSceneDesc.updateTiming = framePeriod;
+  renderSceneDesc.camera.fixed = false;
+  renderSceneDesc.camera.startZoom = 5;
+  renderSceneDesc.keyboardFunc = keyboard;
+  renderSceneDesc.frameFunc = redraw;
+//  renderSceneDesc.mouseFunc = mouseCallback;
+//  renderSceneDesc.mouseMotionFunc = mouseMotionCallback;
+//ß  renderSceneDesc.shutdownFunc = shutDownGame;
 
-  glutMainLoop();
+  initDrawUtils(renderSceneDesc);
 
   // Clean up the test manager.
   BSEDemo::shutDownTestManager();

@@ -87,10 +87,7 @@ void drawArrowCharacter(const bse::Vec2& pos, const bse::Mat22& ori, const bse::
     NUM_RENDER_UPDATEMODES
   } RenderUpdateType;
 
-typedef void (*KEYBOARDFUNCTYPE)(unsigned char, int, int );
-typedef void (*KEYBOARDUPFUNCTYPE)(unsigned char, int, int );
-typedef void (*KEYBOARDSPECIALFUNCTYPE)( int, int, int );
-typedef void (*KEYBOARDUPSPECIALFUNCTYPE)( int, int, int );
+typedef void (*KEYBOARDFUNCTYPE)(int, int, int, int );
 typedef void (*FRAMEFUNCTYPE)( void );
 typedef void (*MOUSEFUNCTYPE)( int, int, int, int );
 typedef void (*MOUSEMOTIONFUNCTYPE)( int, int );
@@ -102,7 +99,6 @@ class CameraDesc
 public:
   CameraDesc() :
       fixed(false),
-      zoomFixed(false),
       zoomMin(0),
       zoomMax(0),
       zoomTick(0),
@@ -120,7 +116,6 @@ public:
         viewTick = 0.1f;
       }
   bool fixed;
-  bool zoomFixed;
   float zoomMin;
   float zoomMax;
   float zoomTick;
@@ -136,8 +131,7 @@ public:
   RenderSceneDesc() :
       windowHeight(1024), windowWidth(768), windowStartX(0), windowStartY(0),
       updateMode(RENDER_UPDATEMODE_TIMED), updateTiming(1000 / 60),
-      keyboardFunc(0), keyboardFuncUp(0), keyboardSpecialFunc(0),
-      keyboardSpecialFuncUp(0), frameFunc(0), mouseFunc(0), mouseMotionFunc(0), reshapeFunc(0), shutdownFunc(0)
+      keyboardFunc(0), frameFunc(0), mouseFunc(0), mouseMotionFunc(0), reshapeFunc(0), shutdownFunc(0)
       {
 
       }
@@ -153,9 +147,6 @@ public:
   char** argv;
 
   KEYBOARDFUNCTYPE keyboardFunc;
-  KEYBOARDUPFUNCTYPE keyboardFuncUp;
-  KEYBOARDSPECIALFUNCTYPE keyboardSpecialFunc;
-  KEYBOARDUPSPECIALFUNCTYPE keyboardSpecialFuncUp;
   FRAMEFUNCTYPE frameFunc;
   MOUSEFUNCTYPE mouseFunc;
   MOUSEMOTIONFUNCTYPE mouseMotionFunc;
@@ -178,9 +169,6 @@ protected:
 
 public:
   KEYBOARDFUNCTYPE customKeyboardFunc;
-  KEYBOARDUPFUNCTYPE customKeyboardUpFunc;
-  KEYBOARDSPECIALFUNCTYPE customKeyboardSpecialFunc;
-  KEYBOARDUPSPECIALFUNCTYPE customKeyboardUpSpecialFunc;
   FRAMEFUNCTYPE customFrameFunc;
   MOUSEFUNCTYPE customMouseFunc;
   MOUSEMOTIONFUNCTYPE customMouseMotionFunc;

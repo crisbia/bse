@@ -618,7 +618,7 @@ Bullet* Ship::shootBullet()
 AsteroidsGameSetup gGameSetup;
 AsteroidsGame* gAsteroidsGame = 0;
 
-void keyboardCallback(unsigned char key, int x, int y)
+void keyboardCallback(int key, int action, int x, int y)
 {
   switch (key)
   {
@@ -781,10 +781,7 @@ void initGraphics(int argc, char** argv)
   renderSceneDesc.updateTiming = 1000 / 60; // ms
     // setup callbacks
   renderSceneDesc.keyboardFunc = keyboardCallback;
-  renderSceneDesc.keyboardFuncUp = keyboardUpCallback;
   renderSceneDesc.frameFunc = frameCallback; // paint
-  renderSceneDesc.keyboardSpecialFunc = keyboardSpecialCallback;
-  renderSceneDesc.keyboardSpecialFuncUp = keyboardUpSpecialCallback;
   renderSceneDesc.mouseFunc = mouseCallback;
   renderSceneDesc.mouseMotionFunc = mouseMotionCallback;
   renderSceneDesc.shutdownFunc = shutdownGame;

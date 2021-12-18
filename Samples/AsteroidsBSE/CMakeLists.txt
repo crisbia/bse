@@ -1,5 +1,5 @@
 find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
+find_package(glfw3 REQUIRED)
 
 set(BSE_ASTEROIDS_SRC
     AsteroidsBSE.cpp
@@ -24,5 +24,5 @@ target_link_libraries(AsteroidsBSE PUBLIC
     bsePhysics
     bseCommons
     ${OPENGL_LIBRARIES} 
-    ${GLUT_LIBRARY}
-)
+    glfw
+ )
