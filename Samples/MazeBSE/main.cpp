@@ -64,32 +64,35 @@ float totalAITime = 0;
 int numSteps = 0;
 
 //---------------------------------------------------------------------------------------------------------------------
-void keyboardCallback(int key, int action, int x, int y)
+void keyboardCallback(int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS)
   {
     switch (key)
     {
-    case '1':
+    case GLFW_KEY_1:
       gMaze->setAsynchPathFinder(!gMaze->isAsynchPathFinderEnabled());
       totalAITime = 0;
       numSteps = 0;
     break;
-    case '2':
+    case GLFW_KEY_2:
       gMaze->reset(gTaskScheduler);
       totalAITime = 0;
       numSteps = 0;
       break;
-    case '+':
+    case GLFW_KEY_KP_ADD:
       increaseNumberOfWorkers();
       break;
-    case '-':
+    case GLFW_KEY_KP_SUBTRACT:
       decreaseNumberOfWorkers();
       break;
-    case ' ':
+    case GLFW_KEY_SPACE:
       break;
     }
+  }
 
+  if (action == GLFW_PRESS || action == GLFW_REPEAT)
+  {  
     PlayerCharacter* player = 0;
     bse::Vec2 pos(0,0);
     const bse::Real INC_POS = 0.025f;
@@ -148,8 +151,8 @@ void frameCallback()
     timer.startTimer();
     gMaze->updateGame();
     float aiUpdateTime = timer.stopTimer();
-	totalAITime += aiUpdateTime;
-	++numSteps;
+	  totalAITime += aiUpdateTime;
+	  ++numSteps;
 
     timer.startTimer();
     gMaze->updatePhysics();

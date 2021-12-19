@@ -600,7 +600,7 @@ BricksGame* gBricksGame = 0;
 void initGame();
 void shutDownGame();
 
-void keyboardCallback(int key, int action, int x, int y)
+void keyboardCallback(int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS)
   {
@@ -608,18 +608,18 @@ void keyboardCallback(int key, int action, int x, int y)
     {
       switch (key)
       {
-      // case GLUT_KEY_LEFT:
-      //   gBricksGame->movePaddle(-PADDLE_SPEED);
-      //   break;
-      // case GLUT_KEY_RIGHT:
-      //   gBricksGame->movePaddle(PADDLE_SPEED);
-      //   break;
+        case GLFW_KEY_LEFT:
+          gBricksGame->movePaddle(-PADDLE_SPEED);
+        break;
+        case GLFW_KEY_RIGHT:
+          gBricksGame->movePaddle(PADDLE_SPEED);
+          break;
       }
     }
 
     switch (key)
     {
-    case ' ':
+    case GLFW_KEY_SPACE:
       {
         if (!gBricksGame->gameOver)
         {
@@ -633,7 +633,7 @@ void keyboardCallback(int key, int action, int x, int y)
         }
       }
       break;
-    case 'q':
+    case GLFW_KEY_Q:
       gBricksGame->aiPaddle = !gBricksGame->aiPaddle;
       break;
     }

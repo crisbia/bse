@@ -16,9 +16,6 @@
 
 #include "AsteroidsBSE.h"
 
-// glut includes
-#include <glut.h>
-
 // demo includes
 #include "DrawUtils.h"
 
@@ -618,76 +615,61 @@ Bullet* Ship::shootBullet()
 AsteroidsGameSetup gGameSetup;
 AsteroidsGame* gAsteroidsGame = 0;
 
-void keyboardCallback(int key, int action, int x, int y)
+void keyboardCallback(int key, int scancode, int action, int mods)
 {
-  switch (key)
+  if (action == GLFW_PRESS)
   {
+    switch (key)
+    {
     // Shoot
-  case ' ':
-    gAsteroidsGame->shoot(true);
-    break;
-  }
-}
-
-void keyboardUpCallback(unsigned char key, int x, int y)
-{
-  switch (key)
-  {
-    // Shoot
-  case ' ':
-    gAsteroidsGame->shoot(false);
-    break;
-  }
-}
-
-
-void keyboardSpecialCallback( int key, int x, int y )
-{
-
-  switch (key)
-  {
-  // Rotate Left
-  case GLUT_KEY_LEFT:
-    gAsteroidsGame->rotate(1);
-    break;
-
-  // Rotate Right
-  case GLUT_KEY_RIGHT:
-    gAsteroidsGame->rotate(-1);
-    break;
-
-  // Accelerate forward
-  case GLUT_KEY_UP:
-    gAsteroidsGame->engine(true);
-    break;
-
-  case GLUT_KEY_DOWN:
-    break;
-  }
-}
-
-void keyboardUpSpecialCallback( int key, int x, int y )
-{
-
-  switch (key)
-  {
+    case GLFW_KEY_SPACE:
+      gAsteroidsGame->shoot(true);
+      break;
     // Rotate Left
-  case GLUT_KEY_LEFT:
-    gAsteroidsGame->rotate(0);
-    break;
+    case GLFW_KEY_LEFT:
+      gAsteroidsGame->rotate(1);
+      break;
 
     // Rotate Right
-  case GLUT_KEY_RIGHT:
-    gAsteroidsGame->rotate(0);
-    break;
+    case GLFW_KEY_RIGHT:
+      gAsteroidsGame->rotate(-1);
+      break;
 
     // Accelerate forward
-  case GLUT_KEY_UP:
-    gAsteroidsGame->engine(false);
-    break;
+    case GLFW_KEY_UP:
+      gAsteroidsGame->engine(true);
+      break;
 
-   case GLUT_KEY_DOWN:
-    break;
+    case GLFW_KEY_DOWN:
+      break;
+    }
+  }
+
+  if (action == GLFW_RELEASE)
+  {
+    switch (key)
+    {
+      case GLFW_KEY_SPACE:
+        gAsteroidsGame->shoot(false);
+        break;
+        // Rotate Left
+      case GLFW_KEY_LEFT:
+        gAsteroidsGame->rotate(0);
+        break;
+
+        // Rotate Right
+      case GLFW_KEY_RIGHT:
+        gAsteroidsGame->rotate(0);
+        break;
+
+        // Accelerate forward
+      case GLFW_KEY_UP:
+        gAsteroidsGame->engine(false);
+        break;
+
+      case GLFW_KEY_DOWN:
+        break;
+    }
   }
 }
 

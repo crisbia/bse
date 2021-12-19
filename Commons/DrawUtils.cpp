@@ -302,7 +302,7 @@ void handlerKeyboard(GLFWwindow* window, int key, int scancode, int action, int 
 {
   if (gRenderScene->customKeyboardFunc)
   {
-    gRenderScene->customKeyboardFunc(key, action, 0, 0); //x, y);
+    gRenderScene->customKeyboardFunc(key, scancode, action, mods);
   }
 
   if (action == GLFW_PRESS)

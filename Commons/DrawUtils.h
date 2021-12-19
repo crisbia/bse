@@ -87,7 +87,7 @@ void drawArrowCharacter(const bse::Vec2& pos, const bse::Mat22& ori, const bse::
     NUM_RENDER_UPDATEMODES
   } RenderUpdateType;
 
-typedef void (*KEYBOARDFUNCTYPE)(int, int, int, int );
+typedef void (*KEYBOARDFUNCTYPE)(int key, int scancode, int action, int mods);
 typedef void (*FRAMEFUNCTYPE)( void );
 typedef void (*MOUSEFUNCTYPE)( int, int, int, int );
 typedef void (*MOUSEMOTIONFUNCTYPE)( int, int );
