@@ -9,12 +9,6 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-
-// system includes
-#if defined(WIN32)
-#include <windows.h>
-#endif
-
 #include <vector>
 
 // bse includes
@@ -685,17 +679,6 @@ void frameCallback()
   gDebugDraw.renderAll();
 }
 
-void mouseCallback( int button, int state, int x, int y )
-{
-
-}
-
-void mouseMotionCallback( int x, int y )
-{
-
-}
-
-
 void initGame()
 {
   BricksGameDesc gameDesc;
@@ -788,9 +771,7 @@ void initGraphics(int argc, char** argv)
   renderSceneDesc.camera.fixed = true;
     // setup callbacks
   renderSceneDesc.keyboardFunc = keyboardCallback;
-  renderSceneDesc.frameFunc = frameCallback; // paint
-  renderSceneDesc.mouseFunc = mouseCallback;
-  renderSceneDesc.mouseMotionFunc = mouseMotionCallback;
+  renderSceneDesc.frameFunc = frameCallback;
   renderSceneDesc.shutdownFunc = shutDownGame;
 
   initDrawUtils(renderSceneDesc);

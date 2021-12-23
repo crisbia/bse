@@ -19,12 +19,6 @@
 # endif
 #endif
 
-#if defined(_XBOX)
-#include <xtl.h>
-#elif defined(WIN32)
-#include <windows.h>
-#endif
-
 #include "bseTypes.h"
 #include <map>
 #include <vector>

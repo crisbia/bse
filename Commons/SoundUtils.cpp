@@ -1,10 +1,6 @@
 #include "SoundUtils.h"
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
-// TODO: this is just the initial skeleton for a nice wrap around the sound system library.
+// TODO: this is just the initial skeleton for a wrapper around the sound system library.
 
 SoundManager::SoundSample::SoundSample(SoundManager* manager) : m_manager(manager)
 {

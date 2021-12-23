@@ -46,8 +46,6 @@ public:
   bool keys[256];
   int  keyModifiers; // mask for shift (1), alt (2), canc (4)
 
-
-  int mDx, mDy, mX, mY;
   int mButtons[3];
   bse::Vec2 mousePos;  // position of the mouse in world coordinate.
 

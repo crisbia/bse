@@ -109,48 +109,8 @@ void destroyDefaultScene()
   gToolsHandler->destroyPhysicsScene(gScene);
 }
 
-bse::Int width = 800;
-bse::Int height = 600;
 bse::Int framePeriod = 16;
 bse::Int mainWindow;
-bse::Real viewZoom = 2;
-bse::Real viewX = 0.0f;
-bse::Real viewY = -1.0f;
-int tx, ty, tw, th;
-
-//---------------------------------------------------------------------------------------------------------------------
-void reshape(bse::Int w, bse::Int h)
-{
-  width = w;
-  height = h;
-
-  tx = 0;
-  ty = 0;
-  tw = width;
-  th = height;
-
-  glViewport( tx, ty, tw, th );
-
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  double ratio = (double)tw / (double)th;
-
-  gluOrtho2D(viewZoom * (viewX - ratio), viewZoom * (ratio + viewX),
-    viewZoom * (viewY - 0.1), viewZoom * (viewY + 1.9));
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-// Convert a window coordinate point into graphics world coordinates.
-bse::Vec2 screenToWorld(bse::Int x, bse::Int y)
-{
-  bse::Vec2 p;
-  bse::Real ratio = bse::Real(tw) / bse::Real(th);
-  bse::Real u = x / bse::Real(tw);
-  bse::Real v = (th - y) / bse::Real(th);
-  p.x = viewZoom * (viewX - ratio) * (1.0f - u) + viewZoom * (ratio + viewX) * u;
-  p.y = viewZoom * (viewY - 0.1f) * (1.0f - v) + viewZoom * (viewY + 1.9f) * v;
-  return p;
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 // This is used to control the frame rate (60Hz).
@@ -363,47 +323,17 @@ void keyboard(int key, int scancode, int action, int mods)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void mouseButton(bse::Int button, bse::Int state, bse::Int x, bse::Int y)
-{
+void mouseButton(GLFWwindow* window, int button, int action, int mods, double x, double y)
+{  
   gInputControl.mousePos = screenToWorld(x, y);
-  gInputControl.mX = x;
-  gInputControl.mY = y;
-  gInputControl.mouseButton(button, state);
+  gInputControl.mouseButton(button, action == GLFW_PRESS ? 0 : 1);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void passiveMouseMotion(bse::Int x, bse::Int y)
+void mouseMotion(GLFWwindow* window, double x, double y)
 {
   gInputControl.mousePos = screenToWorld(x, y);
-  gInputControl.mX = x;
-  gInputControl.mY = y;
 }
-
-//---------------------------------------------------------------------------------------------------------------------
-void activeMouseMotion(bse::Int x, bse::Int y)
-{
-  gInputControl.mousePos = screenToWorld(x, y);
-  gInputControl.mX = x;
-  gInputControl.mY = y;
-}
-
-#if 0 // This callback doesn't work as expected on Win32.
-//---------------------------------------------------------------------------------------------------------------------
-void mouseEntry(int state)
-{
-  switch (state)
-  {
-  case GLUT_ENTERED:
-    printf("Mouse entered\n");
-    gInputControl.mEntered = true;
-    break;
-  case GLUT_LEFT:
-    printf("Mouse left\n");
-    gInputControl.mLeft = true;
-    break;
-  }
-}
-#endif
 
 #ifdef WIN32
 //---------------------------------------------------------------------------------------------------------------------
@@ -458,8 +388,8 @@ int main(int argc, char** argv)
   renderSceneDesc.argc = argc;
   renderSceneDesc.argv = argv;
   renderSceneDesc.windowTitle = "bse demo";
-  renderSceneDesc.windowHeight = height;
-  renderSceneDesc.windowWidth = width;
+  renderSceneDesc.windowHeight = 600;
+  renderSceneDesc.windowWidth = 800;
   renderSceneDesc.windowStartX = 0;
   renderSceneDesc.windowStartY = 0;
   renderSceneDesc.updateMode = RENDER_UPDATEMODE_TIMED; // RENDER_UPDATEMODE_CONTINUOS; // RENDER_UPDATEMODE_MANUAL;
@@ -468,9 +398,9 @@ int main(int argc, char** argv)
   renderSceneDesc.camera.startZoom = 5;
   renderSceneDesc.keyboardFunc = keyboard;
   renderSceneDesc.frameFunc = redraw;
-//  renderSceneDesc.mouseFunc = mouseCallback;
-//  renderSceneDesc.mouseMotionFunc = mouseMotionCallback;
-//ß  renderSceneDesc.shutdownFunc = shutDownGame;
+  renderSceneDesc.mouseFunc = mouseButton;
+  renderSceneDesc.mouseMotionFunc = mouseMotion;
+//  renderSceneDesc.shutdownFunc = shutDownGame;
 
   initDrawUtils(renderSceneDesc);
 

@@ -194,18 +194,6 @@ void frameCallback()
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void mouseCallback( int button, int state, int x, int y )
-{
-
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void mouseMotionCallback( int x, int y )
-{
-
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 void initGame()
 {
   bse::UInt numLogicalProc = getNumLogicalProcessors();
@@ -260,9 +248,7 @@ void initGraphics(int argc, char** argv)
   renderSceneDesc.updateTiming = 1000 / 60; // ms
   // setup callbacks
   renderSceneDesc.keyboardFunc = keyboardCallback;
-  renderSceneDesc.frameFunc = frameCallback; // paint
-  renderSceneDesc.mouseFunc = mouseCallback;
-  renderSceneDesc.mouseMotionFunc = mouseMotionCallback;
+  renderSceneDesc.frameFunc = frameCallback;
   renderSceneDesc.shutdownFunc = shutDownGame;
 
   // setup camera

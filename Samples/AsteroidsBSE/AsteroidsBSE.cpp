@@ -689,16 +689,6 @@ void frameCallback()
   gAsteroidsGame->getShip()->drawEngine();
 }
 
-void mouseCallback( int button, int state, int x, int y )
-{
-
-}
-
-void mouseMotionCallback( int x, int y )
-{
-
-}
-
 void initGame()
 {
   // create physics scenario
@@ -764,8 +754,6 @@ void initGraphics(int argc, char** argv)
     // setup callbacks
   renderSceneDesc.keyboardFunc = keyboardCallback;
   renderSceneDesc.frameFunc = frameCallback; // paint
-  renderSceneDesc.mouseFunc = mouseCallback;
-  renderSceneDesc.mouseMotionFunc = mouseMotionCallback;
   renderSceneDesc.shutdownFunc = shutdownGame;
 
   // setup camera

@@ -1,7 +1,6 @@
 #ifndef _DRAWUTILS_H_INCLUDED
 #define _DRAWUTILS_H_INCLUDED
 
-// TODO make platform independent. This is mac specific
 #include <OpenGL/gl.h>
 
 #include <GLFW/glfw3.h>
@@ -89,8 +88,8 @@ void drawArrowCharacter(const bse::Vec2& pos, const bse::Mat22& ori, const bse::
 
 typedef void (*KEYBOARDFUNCTYPE)(int key, int scancode, int action, int mods);
 typedef void (*FRAMEFUNCTYPE)( void );
-typedef void (*MOUSEFUNCTYPE)( int, int, int, int );
-typedef void (*MOUSEMOTIONFUNCTYPE)( int, int );
+typedef void (*MOUSEFUNCTYPE)(GLFWwindow* window, int button, int action, int mods, double, double);
+typedef void (*MOUSEMOTIONFUNCTYPE)(GLFWwindow*, double, double );
 typedef void (*RESHAPEFUNCTYPE)( int, int );
 typedef void (*SHUTDOWNFUNCTYPE) ();
 
@@ -190,6 +189,7 @@ public:
 void initDrawUtils(const RenderSceneDesc& desc);
 void shutdownDrawUtils();
 
+bse::Vec2 screenToWorld(int x, int y);
 
 ////////////////////////////////////
 // QuadTree

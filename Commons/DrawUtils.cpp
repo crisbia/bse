@@ -17,12 +17,9 @@ const bool bDrawNormals = false;
 
 void handlerKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-void handlerKeyboardUp(unsigned char, int, int);
-void handlerKeyboardSpecial(int, int, int);
-void handlerKeyboardUpSpecial(int, int, int);
-void handlerFrame(void);
-void handlerMouse(int, int, int, int);
-void handlerMouseMotion(int, int);
+void handlerFrame();
+void handlerMouse(GLFWwindow*, int, int, int);
+void handlerMouseMotion(GLFWwindow*, double, double);
 void handlerReshape(GLFWwindow*, int, int);
 void handlerTimer(int t);
 
@@ -240,13 +237,6 @@ GLFWwindow* initGraphicsBackend(const RenderSceneDesc& sceneDesc)
 {
   //glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
-  // glutKeyboardFunc(handlerKeyboard);
-  // glutKeyboardUpFunc(handlerKeyboardUp);
-  // glutSpecialFunc(handlerKeyboardSpecial);
-  // glutSpecialUpFunc(handlerKeyboardUpSpecial);
-  // glutMouseFunc(handlerMouse);
-  // glutMotionFunc(handlerMouseMotion);
-
   // Use a timer to control the frame rate.
   // if (sceneDesc.updateMode == RENDER_UPDATEMODE_TIMED)
   // {
@@ -260,6 +250,9 @@ GLFWwindow* initGraphicsBackend(const RenderSceneDesc& sceneDesc)
   glfwMakeContextCurrent(window);
   glfwSetFramebufferSizeCallback(window, handlerReshape);
   glfwSetKeyCallback(window, handlerKeyboard);
+
+  glfwSetMouseButtonCallback(window, handlerMouse);
+  glfwSetCursorPosCallback(window, handlerMouseMotion);
 
   return window;
 }
@@ -384,20 +377,33 @@ void handlerFrame()
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void handlerMouse(int button, int state, int x, int y)
+void handlerMouse(GLFWwindow* window, int button, int action, int mods)
 {
   if (gRenderScene->customMouseFunc)
   {
-    gRenderScene->customMouseFunc(button, state, x, y);
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+
+    int ww,wh, fw, fh;
+    glfwGetWindowSize(window, &ww, &wh);
+    glfwGetFramebufferSize(window, &fw, &fh);
+    double r = (double)fw / (double)ww;
+
+    gRenderScene->customMouseFunc(window, button, action, mods, x * r, y * r);
   }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void handlerMouseMotion(int x, int y)
+void handlerMouseMotion(GLFWwindow* window, double x, double y)
 {
   if (gRenderScene->customMouseMotionFunc)
   {
-    gRenderScene->customMouseMotionFunc(x,y);
+    int ww, wh, fw, fh;
+    glfwGetWindowSize(window, &ww, &wh);
+    glfwGetFramebufferSize(window, &fw, &fh);
+    double r = (double)fw / (double)ww;
+
+    gRenderScene->customMouseMotionFunc(window, x * r, y * r);
   }
 }
 
@@ -427,12 +433,6 @@ void handlerReshape(GLFWwindow* window, int w, int h)
   float left, right, bottom, top;
   gRenderScene->getRenderArea(left, right, bottom, top);
 
-  // float aspectRatio = (float)w / (float)h;
-  // if (w >= h)
-  //   gluOrtho2D(left*aspectRatio, right*aspectRatio, bottom, top); 
-  // else 
-  //   gluOrtho2D(left, right, bottom, top/aspectRatio);
-
   gluOrtho2D(left, right, bottom, top);
 
   if (gRenderScene->customReshapeFunc)
@@ -441,6 +441,19 @@ void handlerReshape(GLFWwindow* window, int w, int h)
   }
 
   handlerFrame();
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// Convert a window coordinate point into graphics world coordinates.
+bse::Vec2 screenToWorld(int x, int y)
+{
+  bse::Vec2 p;
+  bse::Real ratio = bse::Real(gRenderScene->tw) / bse::Real(gRenderScene->th);
+  bse::Real u = x / bse::Real(gRenderScene->tw);
+  bse::Real v = (gRenderScene->th - y) / bse::Real(gRenderScene->th);
+  p.x = gRenderScene->viewZoom * (gRenderScene->viewX - ratio) * (1.0f - u) + gRenderScene->viewZoom * (ratio + gRenderScene->viewX) * u;
+  p.y = gRenderScene->viewZoom * (gRenderScene->viewY - 0.1f) * (1.0f - v) + gRenderScene->viewZoom * (gRenderScene->viewY + 1.9f) * v;
+  return p;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

@@ -12,9 +12,7 @@ namespace BSEDemo
 
 //---------------------------------------------------------------------------------------------------------------------
 InputControl::InputControl() :
-  keyModifiers(0),
-  mDx(0), mDy(0),
-  mX(-1), mY(-1)
+  keyModifiers(0)
 {
   for (int i=0; i<256; ++i)
   {
