@@ -13,6 +13,9 @@
 // render scene is a sort of singleton.
 static RenderScene* gRenderScene = 0;
 
+static TextManager gTextManager;
+
+
 const bool bDrawNormals = false;
 
 void handlerKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -26,31 +29,57 @@ void handlerTimer(int t);
 //---------------------------------------------------------------------------------------------------------------------
 void drawColorString(int x, int y, const Color& col, const char *buffer)
 {
-  int w = 0;
-  int h = 0;
-  glfwGetFramebufferSize(gRenderScene->mainWindow, &w, &h);
+  // int w = 0;
+  // int h = 0;
+  // glfwGetFramebufferSize(gRenderScene->mainWindow, &w, &h);
 
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();
+  // glMatrixMode(GL_PROJECTION);
+  // glPushMatrix();
+  // glLoadIdentity();
 
-  gluOrtho2D(0, w, h, 0);
-  glMatrixMode(GL_MODELVIEW);
-  glPushMatrix();
-  glLoadIdentity();
+  // gluOrtho2D(0, w, h, 0);
+  // glMatrixMode(GL_MODELVIEW);
+  // glPushMatrix();
+  // glLoadIdentity();
 
-  glColor3f(col.cx, col.cy, col.cz);
-  glRasterPos2i(x, y);
-  bse::Int length = (bse::Int)strlen(buffer);
-  // for (bse::Int i = 0; i < length; ++i)
-  // {
-  //   glutBitmapCharacter(GLUT_BITMAP_8_BY_13, buffer[i]);
-  // }
+  // glColor3f(col.cx, col.cy, col.cz);
+  // glRasterPos2i(x, y);
+  // bse::Int length = (bse::Int)strlen(buffer);
+  // // for (bse::Int i = 0; i < length; ++i)
+  // // {
+  // //   glutBitmapCharacter(GLUT_BITMAP_8_BY_13, buffer[i]);
+  // // }
 
-  glPopMatrix();
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-  glMatrixMode(GL_MODELVIEW);
+  // glPopMatrix();
+  // glMatrixMode(GL_PROJECTION);
+  // glPopMatrix();
+  // glMatrixMode(GL_MODELVIEW);
+
+  gTextManager.drawText(col, buffer);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void drawStringStart(int startX, int startY, int offset)
+{
+  gTextManager.startDrawing(startX, startY, offset);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void drawString(const Color& col, const char *string, ...)
+{
+  char buffer[128];
+
+  va_list arg;
+  va_start(arg, string);
+#if _MSC_VER > 1000
+  vsprintf_s(buffer, string, arg);
+#else
+  vsprintf(buffer, string, arg);
+#endif
+
+  va_end(arg);
+
+  gTextManager.drawText(col, buffer);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -253,6 +282,8 @@ GLFWwindow* initGraphicsBackend(const RenderSceneDesc& sceneDesc)
 
   glfwSetMouseButtonCallback(window, handlerMouse);
   glfwSetCursorPosCallback(window, handlerMouseMotion);
+
+  gTextManager.init();
 
   return window;
 }
@@ -613,6 +644,12 @@ bool isExtensionSupported( char* szTargetExtension )
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+void TextManager::init()
+{
+  our_font.init("/Library/Fonts/Arial Unicode.ttf", 18);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 void TextManager::startDrawing(int startX, int startY, int offset)
 {
   m_startX = startX;
@@ -621,48 +658,33 @@ void TextManager::startDrawing(int startX, int startY, int offset)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void TextManager::drawText(const Color& col, const char *string, ...)
+void TextManager::drawText(const Color& col, const char *text)
 {
   int x = m_startX;
   int y = m_startY;
   m_startY += m_offset;
 
-	char buffer[128];
+	// glMatrixMode(GL_PROJECTION);
+	// glPushMatrix();
+	// glLoadIdentity();
+	// int w = 0;
+	// int h = 0;
+  // glfwGetFramebufferSize(gRenderScene->mainWindow, &w, &h);
 
-	va_list arg;
-	va_start(arg, string);
-#if _MSC_VER > 1000
-	vsprintf_s(buffer, string, arg);
-#else
-  vsprintf(buffer, string, arg);
-#endif
-
-	va_end(arg);
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	int w = 0;
-	int h = 0;
-  glfwGetFramebufferSize(gRenderScene->mainWindow, &w, &h);
-
-	gluOrtho2D(0, w, h, 0);
-	glMatrixMode(GL_MODELVIEW);
+	// gluOrtho2D(0, w, h, 0);
+	// glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
 
   glColor3f(col.cx, col.cy, col.cz);
-	glRasterPos2i(x, y);
-	bse::Int length = (bse::Int)strlen(buffer);
-	// for (bse::Int i = 0; i < length; ++i)
-	// {
-	// 	glutBitmapCharacter(GLUT_BITMAP_8_BY_13, buffer[i]);
-	// }
+	// glRasterPos2i(x, y);
+
+  glfreetype::print(our_font, x, y, text);
 
 	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
+	// glMatrixMode(GL_PROJECTION);
+	// glPopMatrix();
+	// glMatrixMode(GL_MODELVIEW);
 }
 
 //---------------------------------------------------------------------------------------------------------------------

@@ -158,21 +158,19 @@ void frameCallback()
     gMaze->updatePhysics();
     float physicsUpdateTime = timer.stopTimer();
 
+    const Color white(1,1,1);
+
     // Output step timer result.
-    int base = 10, offset = 15;
-    drawString(10, base, "AI Time: %.5f - %.5f", aiUpdateTime, totalAITime / numSteps);
-    base += offset;
-    drawString(10, base, "Physics Time: %.5f", physicsUpdateTime);
-    base += offset;
-    drawString(10, base, "Asynch Path Finder: %s", gMaze->isAsynchPathFinderEnabled() ? "On" : "Off");
-    base += offset;
+    int base = 10, offset = 30;
+    drawStringStart(10, base, offset);
+    drawString(white, "AI Time: %.5f - %.5f", aiUpdateTime, totalAITime / numSteps);
+    drawString(white, "Physics Time: %.5f", physicsUpdateTime);
+    drawString(white, "Asynch Path Finder: %s", gMaze->isAsynchPathFinderEnabled() ? "On" : "Off");
     if (gTaskScheduler && gMaze->isAsynchPathFinderEnabled())
     {
-      drawString(10, base, "Num threads: %d", gTaskScheduler->getNumWorkerThreads() + 1);
-      base += offset;
+      drawString(white, "Num threads: %d", gTaskScheduler->getNumWorkerThreads() + 1);
     }
-    drawString(10, base, "Num Searches: %d", gMaze->getNumSearches());
-    base += offset;
+    drawString(white, "Num Searches: %d", gMaze->getNumSearches());
 
 #ifdef BSE_ENABLE_PROFILER
     Color textCol(1,1,1);
@@ -186,8 +184,7 @@ void frameCallback()
 
 #endif
 
-    drawString(10, base, "Use arrow keys to move.");
-    base += offset;
+    drawString(white, "Use arrow keys to move.");
 
     gDebugDraw.renderAll();
   }

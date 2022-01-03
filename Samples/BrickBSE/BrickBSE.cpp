@@ -634,8 +634,6 @@ void keyboardCallback(int key, int scancode, int action, int mods)
   }
 }
 
-TextManager gTextManager;
-
 void frameCallback()
 {
   gDebugDraw.clearAll();
@@ -643,33 +641,33 @@ void frameCallback()
   gBricksGame->updateGameStatus();
 
   // use built in primitive rendering stuff
-  gTextManager.startDrawing(5,20, 20); // startX, starY, offset
+  drawStringStart(5, 20, 20); // startX, starY, offset
 
   const Color lightRed(0.9f,0.6f,0.5f);
   const Color lightBlue(0.3f,0.9f,0.3f);
 
   if (gBricksGame->aiPaddle)
   {
-    gTextManager.drawText(lightRed, "q : disable AI paddle control");
+    drawString(lightRed, "q : disable AI paddle control");
   }
   else
   {
-    gTextManager.drawText(lightRed, "q : enable AI paddle control");
+    drawString(lightRed, "q : enable AI paddle control");
   }
 
-  gTextManager.drawText(lightRed, "SPACE : throw the ball");
-  gTextManager.drawText(lightRed, "LEFT/RIGHT : control the paddle");
+  drawString(lightRed, "SPACE : throw the ball");
+  drawString(lightRed, "LEFT/RIGHT : control the paddle");
 
   if (!gBricksGame->gameOver)
   {
     if (gBricksGame->getNumberOfLives() == UNLIMITED_LIVES)
-      gTextManager.drawText(lightBlue, "unlimited lives");
+      drawString(lightBlue, "unlimited lives");
     else
-      gTextManager.drawText(lightBlue, "lives: %d", gBricksGame->getNumberOfLives());
+      drawString(lightBlue, "lives: %d", gBricksGame->getNumberOfLives());
   }
   else
   {
-    gTextManager.drawText(lightBlue, "Game Over");
+    drawString(lightBlue, "Game Over");
   }
 
 

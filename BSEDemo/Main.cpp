@@ -173,13 +173,12 @@ void redraw()
   gDebugDraw.renderAll();
 
   const Color textCol(0.2f, 0.2f, 0.2f);
-  const int offset = 15;
+  const int offset = 25;
   int base = 15;
 
   float drawElapsed = drawTimer.stopTimer();
-  drawString(5, base, textCol, "Draw time: %.5f", drawElapsed);
-  base += offset;
-
+  drawStringStart(5, base, offset);
+  drawString(textCol, "Draw time: %.5f", drawElapsed);
 
   if (!g_bSingleStep && !g_bPaused)
   {
@@ -195,16 +194,13 @@ void redraw()
 
     gScene->simulate(timeStep);
     float stepElapsed = stepTimer.stopTimer();
-    drawString(5, base, textCol, "Step time: %.5f", stepElapsed);
-    base += offset;
+    drawString(textCol, "Step time: %.5f", stepElapsed);
     totalTime += stepElapsed;
-    drawString(5, base, textCol, "Average: %.5f", totalTime / numSteps);
+    drawString(textCol, "Average: %.5f", totalTime / numSteps);
     ++numSteps;
-    base += offset;
   }
 
-  drawString(5, base, textCol, "Number of contacts: %d", gContactFeedback.contactPoints.size());
-  base += offset;
+  drawString(textCol, "Number of contacts: %d", gContactFeedback.contactPoints.size());
 
   // retrieve profiling data
   if (gScene->getProfiler())
@@ -212,39 +208,32 @@ void redraw()
     const bse::Profiler* profiler = gScene->getProfiler();
     bse::ProfilerTask* profileTask = profiler->getRoot();
 
-    int startX = 5;
-    base = reportProfilerOutput(profileTask, startX, base, 10, offset, textCol);
+//  TODO
+//    int startX = 5;
+//    base = reportProfilerOutput(profileTask, startX, base, 10, offset, textCol);
 
     static float elapsedTime = 0;
     elapsedTime += timeStep;
-    drawString(5, base, textCol, "Elapsed Time %f", elapsedTime*1000.0f);
-    base += offset;
+    drawString(textCol, "Elapsed Time %f", elapsedTime*1000.0f);
   }
 
-  drawString(5, base, textCol, "Test: %s", BSEDemo::gTestManager->getCurrentTestName());
-  base += offset;
+  drawString(textCol, "Test: %s", BSEDemo::gTestManager->getCurrentTestName());
 
-  drawString(5, base, textCol, "Space: next test");
-  base += offset;
+  drawString(textCol, "Space: next test");
 
-  drawString(5, base, textCol, "A,Z: zoom, ArrKeys: move, B: throw");
-  base += offset;
+  drawString(textCol, "A,Z: zoom, ArrKeys: move, B: throw");
 
-  drawString(5, base, textCol, "D: change render options");
-  base += offset;
+  drawString(textCol, "D: change render options");
 
-  drawString(5, base, textCol, "LeftMouse: apply a spring force");
-  base += offset;
+  drawString(textCol, "LeftMouse: apply a spring force");
 
   if (gInputControl.mEntered)
   {
-    drawString(5, base, textCol, "Mouse Entered");
-    base += offset;
+    drawString(textCol, "Mouse Entered");
   }
   if (gInputControl.mLeft)
   {
-    drawString(5, base, textCol, "Mouse Left");
-    base += offset;
+    drawString(textCol, "Mouse Left");
   }
 
   // Reset some internal state variables.

@@ -1,5 +1,6 @@
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
+find_package(Freetype REQUIRED)
 
 set(BSE_DEMO_SRC
     Main.cpp
@@ -7,9 +8,9 @@ set(BSE_DEMO_SRC
     PhysicsTests.cpp
     SettingsStack.cpp
     TestFramework.cpp
-#    tests.cpp
     TestUtils.cpp
     ../Commons/DrawUtils.cpp
+    ../Commons/TextRenderer.cpp
     ../Commons/SysUtils.cpp
 )
 
@@ -20,6 +21,7 @@ include_directories(
     ../bse/bseAI/Include
     ../bse/bseTools/Include
     ../Commons
+    ${FREETYPE_INCLUDE_DIRS}
 )
 
 add_compile_definitions(GL_SILENCE_DEPRECATION)
@@ -34,4 +36,5 @@ target_link_libraries(BSEDemo PUBLIC
     bseTools
     ${OPENGL_LIBRARIES} 
     glfw
+    ${FREETYPE_LIBRARIES}
 )

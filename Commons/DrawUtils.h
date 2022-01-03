@@ -10,6 +10,8 @@
 
 #include <string>
 
+#include "TextRenderer.h"
+
 typedef enum
 {
   SHAPE_DRAW_NONE            = 0,
@@ -60,6 +62,9 @@ void drawWorldAxis(const Color& c);
 void drawFrame(const bse::Vec2& pos, const bse::Mat22& ori, const bse::Real scale); // x = red, y = green
 void drawString(int x, int y, const char *string, ...);
 void drawString(int x, int y, const Color& col, const char *string, ...);
+void drawStringStart(int startX, int startY, int offset);
+void drawString(const Color& col, const char *string, ...);
+
 
 
 namespace bse
@@ -231,13 +236,16 @@ unsigned int drawCircleIntoArray(const bse::Vec2& pos, const bse::Real& radius, 
 class TextManager
 {
 public:
-  TextManager() : m_startX(5), m_startY(5), m_offset(10)
-  {}
+  void init();
 
   void startDrawing(int startX, int startY, int offset);
-  void drawText(const Color& col, const char *string, ...);
+  void drawText(const Color& col, const char *text);
 protected:
-  int m_startX, m_startY, m_offset;
+  int m_startX = 5;
+  int m_startY = 5;
+  int m_offset = 10;
+
+  glfreetype::font_data our_font;
 };
 
 class DebugDraw
