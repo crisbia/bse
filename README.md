@@ -49,3 +49,6 @@ There are currently 3 demo projects:
 - _MazeBSE_ shows the pathfinder at work. It generates a random &quot;perfect maze&quot; (eg: any 2 points in the maze are connected) and place some &quot;enemies&quot; on it. The enemies run the search algorithm for the player and try to follow the path. The demo shows how the pathfinder can easily be run in parallel. Move the light-blue character with the arrow keys. The non-player characters continuously run a pathfinder and follow the computed path. The key &#39;1&#39; enables/disables the asynchronous pathfinder. When the asynchronous search is enabled, all the available logical processors are used.
 
 All the demos share some simple useful piece of tech, for example a basic debug graphics manager, which allows to draw primitive through _opengl_ in a quite transparent way, and a user input manager that collect mouse and keyboard input.
+
+
+Testing Release notes
