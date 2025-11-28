@@ -5,8 +5,9 @@
 #include <windows.h>
 #endif
 
-// TODO make platform independent. This is mac specific
-#include <OpenGL/gl.h>
+#include <GL/glew.h>
+#include <GL/glut.h>
+#include <GL/gl.h>
 
 #include "bseCommons.h"
 #include "bseMath.h"

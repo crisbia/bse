@@ -1,6 +1,5 @@
 #include "DrawUtils.h"
 #include "bsePhysics.h"
-#include <glut.h>
 #include "SysUtils.h"
 #include <stdarg.h>
 #include <stdio.h>

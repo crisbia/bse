@@ -1,5 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
+//  ******** WARNING: INCOMPLETE PROJECT *********
+//
 //              AsteroidsBSE Demo - SeeBeex soft 2008-2011
 //
 //  This simple Asteroids clone is part of the bse framework.
@@ -17,7 +19,8 @@
 #include "AsteroidsBSE.h"
 
 // glut includes
-#include <glut.h>
+#include <GL/glew.h>
+#include <GL/glut.h>
 
 // demo includes
 #include "DrawUtils.h"

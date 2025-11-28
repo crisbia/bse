@@ -4,6 +4,9 @@
 #if defined(WIN32)
 #include <windows.h>
 #endif
+
+#include <GL/glew.h>
+#include <GL/glut.h>
 #include <GL/gl.h>
 
 #include "bseCommons.h"

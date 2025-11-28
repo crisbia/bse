@@ -1,5 +1,6 @@
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
 
 set(BSE_DEMO_SRC
     Main.cpp
@@ -33,6 +34,8 @@ target_link_libraries(BSEDemo PUBLIC
     bseCommons
     bseAI
     bseTools
-    ${OPENGL_LIBRARIES} 
-    ${GLUT_LIBRARY}
+    OpenGL::GL
+    OpenGL::GLU
+    GLUT::GLUT
+    GLEW::GLEW
 )

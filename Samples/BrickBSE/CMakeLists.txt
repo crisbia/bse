@@ -1,5 +1,6 @@
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
 
 set(BSE_BRICK_SRC
     BrickBSE.cpp
@@ -23,6 +24,8 @@ add_executable(BrickBSE
 target_link_libraries(BrickBSE PUBLIC
     bsePhysics
     bseCommons
-    ${OPENGL_LIBRARIES} 
-    ${GLUT_LIBRARY}
+    GLEW::GLEW
+    GLUT::GLUT
+    OpenGL::GL
+    OpenGL::GLU
 )

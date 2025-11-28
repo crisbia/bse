@@ -19,7 +19,9 @@
 #include <list>
 
 // glut includes
-#include <glut.h>
+#include <GL/glew.h>
+#include <GL/glut.h>
+
 // demo includes
 #include "DrawUtils.h"
 

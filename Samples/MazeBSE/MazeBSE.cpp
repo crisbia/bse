@@ -17,9 +17,6 @@
 
 #include <vector>
 
-// glut includes
-#include <glut.h>
-
 // demo includes
 #include "DrawUtils.h"
 

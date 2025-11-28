@@ -1,5 +1,6 @@
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
 
 set(BSE_MAZE_SRC
     main.cpp
@@ -26,6 +27,8 @@ target_link_libraries(MazeBSE PUBLIC
     bsePhysics
     bseCommons
     bseAI
-    ${OPENGL_LIBRARIES} 
-    ${GLUT_LIBRARY}
+    OpenGL::GL
+    OpenGL::GLU
+    GLUT::GLUT
+    GLEW::GLEW
 )

@@ -1,6 +1,7 @@
 #ifndef _BSE_MEMORYMANAGER_H_INCLUDED
 #define _BSE_MEMORYMANAGER_H_INCLUDED
 
+#include <cstdlib>
 #include <vector>
 
 namespace bse

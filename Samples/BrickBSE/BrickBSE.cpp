@@ -18,7 +18,8 @@
 #include <vector>
 
 // glut includes
-#include <glut.h>
+#include <GL/glew.h>
+#include <GL/glut.h>
 
 // bse includes
 #include "bsePhysics.h"
