@@ -69,9 +69,7 @@ SimpleTaskScheduler::SimpleTaskScheduler(bse::UInt numWorkerThreads, bse::UInt p
     // create worker threads
     for (bse::UInt iThread=0; iThread<m_numWorkerThreads; ++iThread)
     {
-      std::thread t(SimpleTaskScheduler::threadFunc, (void*)this);
-      t.detach();
-      m_workerThreads.push_back(std::move(t));
+      m_workerThreads.emplace_back(std::thread(SimpleTaskScheduler::threadFunc, (void*)this));
     }
   }
 }

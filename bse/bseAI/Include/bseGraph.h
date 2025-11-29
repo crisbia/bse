@@ -145,7 +145,7 @@ public:
   float getTotalCost() const { return costSoFar + costToDest; }
 };
 
-struct nodeBetterThan : public std::binary_function<const GraphNodeGhost*, const GraphNodeGhost*, bool>
+struct nodeBetterThan : public std::function<bool(const GraphNodeGhost*, const GraphNodeGhost*)>
 {
 public:
   bool operator() (const GraphNodeGhost* a, const GraphNodeGhost* b) const
@@ -154,7 +154,7 @@ public:
   }
 };
 
-struct nodeSwap : public std::binary_function<GraphNodeGhost* , GraphNodeGhost*, void>
+struct nodeSwap : public std::function<void(GraphNodeGhost* , GraphNodeGhost*)>
 {
 public:
   void operator() (GraphNodeGhost* a, GraphNodeGhost* b)
@@ -165,7 +165,7 @@ public:
   }
 };
 
-struct nodeIsEqual : public std::binary_function<GraphNodeGhost*, GraphNodeGhost*, bool>
+struct nodeIsEqual : public std::function<bool(GraphNodeGhost*, GraphNodeGhost*)>
 {
 public:
   bool operator() (GraphNodeGhost* a, GraphNodeGhost* b) const
@@ -174,7 +174,7 @@ public:
   }
 };
 
-struct nodeElementValue : public std::unary_function<GraphNodeGhost*, float>
+struct nodeElementValue : public std::function<float(GraphNodeGhost*)>
 {
 public:
   float operator() (GraphNodeGhost* a) const
@@ -183,7 +183,7 @@ public:
   }
 };
 
-struct nodeID : public std::unary_function<GraphNodeGhost*, int>
+struct nodeID : public std::function<int(GraphNodeGhost*)>
 {
 public:
   int operator() (GraphNodeGhost* n) const
